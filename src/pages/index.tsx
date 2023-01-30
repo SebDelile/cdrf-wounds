@@ -1,6 +1,25 @@
-import Head from 'next/head'
+import { inputsType } from '@/types/inputsType';
+import { outputsType } from '@/types/outputsType';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { computeResult } from '@/utils/computeResult';
+import { woundResults } from 'src/constants/woundResults';
+import { woundTable } from '@/constants/woundTable';
+import { initialResults } from '@/constants/initialResults';
 
 export default function Home() {
+  const [inputs, setInputs] = useState<inputsType>({
+    FOR: 0,
+    RES: 0,
+  });
+
+  const [outputs, setOutputs] = useState<outputsType>(initialResults);
+
+  useEffect(() => {
+    setOutputs(computeResult(inputs));
+  }, [inputs]);
+
+  const totalOutputs = Object.values(outputs).reduce((a, b) => a + b, 0);
   return (
     <>
       <Head>
@@ -10,8 +29,55 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        
+        <label>
+          {'FOR : '}
+          <input
+            type="number"
+            value={inputs.FOR}
+            onChange={(event) => {
+              setInputs((state) => ({
+                ...state,
+                FOR: parseInt(event.target.value),
+              }));
+            }}
+          />
+        </label>
+        <br />
+        <label>
+          {'RES : '}
+          <input
+            type="number"
+            value={inputs.RES}
+            onChange={(event) => {
+              setInputs((state) => ({
+                ...state,
+                RES: parseInt(event.target.value),
+              }));
+            }}
+          />
+        </label>
+        <br />
+        <table>
+          <thead>
+            <tr>
+              <th>{`(${totalOutputs})`}</th>
+              <th>Somme</th>
+              <th>Proportion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(outputs).map(([resultat, somme]) => (
+              <tr key={resultat}>
+                <th>{resultat}</th>
+                <td>{somme}</td>
+                <td>
+                  {totalOutputs ? Math.round((somme / totalOutputs) * 100) : 0}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </main>
     </>
-  )
+  );
 }
