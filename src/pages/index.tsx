@@ -2,7 +2,7 @@ import { inputsType } from '@/types/inputsType';
 import { outputsType } from '@/types/outputsType';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { computeResult } from '@/utils/computeResult';
+import { computeResults } from '@/utils/computeResults';
 import { woundResults } from 'src/constants/woundResults';
 import { woundTable } from '@/constants/woundTable';
 import { initialResults } from '@/constants/initialResults';
@@ -16,7 +16,7 @@ export default function Home() {
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
 
   useEffect(() => {
-    setOutputs(computeResult(inputs));
+    setOutputs(computeResults(inputs));
   }, [inputs]);
 
   const totalOutputs = Object.values(outputs).reduce((a, b) => a + b, 0);

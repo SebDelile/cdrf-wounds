@@ -13,3 +13,5 @@ export const woundResults = [
   critique,
   tueNet,
 ] as const;
+
+export type woundResultsType = (typeof woundResults)[number];

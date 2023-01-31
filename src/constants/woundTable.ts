@@ -1,8 +1,18 @@
-import { rien, sonne, legere, grave, critique, tueNet } from './woundResults';
+import { diceType } from './dice';
+import { woundIntensityType } from './woundIntensity';
+import {
+  rien,
+  sonne,
+  legere,
+  grave,
+  critique,
+  tueNet,
+  woundResultsType,
+} from './woundResults';
 
-export const woundTable = {
+export const woundTable: WoundTableType = {
   1: {
-    '-1': rien,
+    [-1]: rien,
     0: sonne,
     1: sonne,
     2: legere,
@@ -15,7 +25,7 @@ export const woundTable = {
     9: critique,
   },
   2: {
-    '-1': sonne,
+    [-1]: sonne,
     0: sonne,
     1: legere,
     2: legere,
@@ -28,7 +38,7 @@ export const woundTable = {
     9: tueNet,
   },
   3: {
-    '-1': sonne,
+    [-1]: sonne,
     0: legere,
     1: legere,
     2: grave,
@@ -41,7 +51,7 @@ export const woundTable = {
     9: tueNet,
   },
   4: {
-    '-1': legere,
+    [-1]: legere,
     0: legere,
     1: grave,
     2: grave,
@@ -54,7 +64,7 @@ export const woundTable = {
     9: tueNet,
   },
   5: {
-    '-1': legere,
+    [-1]: legere,
     0: grave,
     1: critique,
     2: critique,
@@ -67,7 +77,7 @@ export const woundTable = {
     9: tueNet,
   },
   6: {
-    '-1': legere,
+    [-1]: legere,
     0: grave,
     1: critique,
     2: critique,
@@ -79,4 +89,8 @@ export const woundTable = {
     8: tueNet,
     9: tueNet,
   },
+};
+
+export type WoundTableType = {
+  [index in diceType]: { [index in woundIntensityType]: woundResultsType };
 };
