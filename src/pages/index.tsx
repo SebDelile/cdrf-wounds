@@ -10,7 +10,13 @@ import { initialResults } from '@/constants/initialResults';
 export default function Home() {
   const [inputs, setInputs] = useState<inputsType>({
     FOR: 0,
+    armeSacree: false,
+    tirImmobile: false,
+    fleau: false,
+    //
     RES: 0,
+    armureSacree: false,
+    durACuire: false,
   });
 
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
@@ -18,6 +24,13 @@ export default function Home() {
   useEffect(() => {
     setOutputs(computeResults(inputs));
   }, [inputs]);
+
+  const handleToggleBoolean = (field: keyof inputsType) => {
+    setInputs((state) => ({
+      ...state,
+      [field]: !state[field],
+    }));
+  };
 
   const totalOutputs = Object.values(outputs).reduce((a, b) => a + b, 0);
   return (
@@ -29,34 +42,86 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <label>
-          {'FOR : '}
-          <input
-            type="number"
-            value={inputs.FOR}
-            onChange={(event) => {
-              setInputs((state) => ({
-                ...state,
-                FOR: parseInt(event.target.value),
-              }));
-            }}
-          />
-        </label>
-        <br />
-        <label>
-          {'RES : '}
-          <input
-            type="number"
-            value={inputs.RES}
-            onChange={(event) => {
-              setInputs((state) => ({
-                ...state,
-                RES: parseInt(event.target.value),
-              }));
-            }}
-          />
-        </label>
-        <br />
+        <div>
+          <label>
+            {'FOR : '}
+            <input
+              type="number"
+              value={inputs.FOR}
+              onChange={(event) => {
+                setInputs((state) => ({
+                  ...state,
+                  FOR: parseInt(event.target.value),
+                }));
+              }}
+            />
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.armeSacree}
+              onChange={() => {
+                handleToggleBoolean('armeSacree');
+              }}
+            />
+            {'Arme sacrée'}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.tirImmobile}
+              onChange={() => {
+                handleToggleBoolean('tirImmobile');
+              }}
+            />
+            {'Tir immobile'}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.fleau}
+              onChange={() => {
+                handleToggleBoolean('fleau');
+              }}
+            />
+            {'Fleau'}
+          </label>
+        </div>
+        <div>
+          <label>
+            {'RES : '}
+            <input
+              type="number"
+              value={inputs.RES}
+              onChange={(event) => {
+                setInputs((state) => ({
+                  ...state,
+                  RES: parseInt(event.target.value),
+                }));
+              }}
+            />
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.armureSacree}
+              onChange={() => {
+                handleToggleBoolean('armureSacree');
+              }}
+            />
+            {'Armure sacrée'}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.durACuire}
+              onChange={() => {
+                handleToggleBoolean('durACuire');
+              }}
+            />
+            {'Dur à cuire'}
+          </label>
+        </div>
         <table>
           <thead>
             <tr>
