@@ -8,6 +8,7 @@ import { woundTable } from '@/constants/woundTable';
 import { initialResults } from '@/constants/initialResults';
 
 export default function Home() {
+  const [isDebug, setIsDebug] = useState(false);
   const [inputs, setInputs] = useState<inputsType>({
     FOR: 0,
     armeSacree: false,
@@ -22,8 +23,8 @@ export default function Home() {
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
 
   useEffect(() => {
-    setOutputs(computeResults(inputs));
-  }, [inputs]);
+    setOutputs(computeResults(inputs, isDebug));
+  }, [inputs, isDebug]);
 
   const handleToggleBoolean = (field: keyof inputsType) => {
     setInputs((state) => ({
@@ -143,6 +144,18 @@ export default function Home() {
           </tbody>
         </table>
       </main>
+      <footer>
+        <label>
+          <input
+            type="checkbox"
+            checked={isDebug}
+            onChange={() => {
+              setIsDebug((state) => !state);
+            }}
+          />
+          {'Debug'}
+        </label>
+      </footer>
     </>
   );
 }

@@ -6,7 +6,11 @@ import { outputsType } from '@/types/outputsType';
 import { woundIntensityType } from '@/constants/woundIntensity';
 import { rien, tueNet, woundResultsType } from '@/constants/woundResults';
 
-export const computeResults = (inputs: inputsType): outputsType => {
+export const computeResults = (
+  inputs: inputsType,
+  isDebug: boolean
+): outputsType => {
+  const debug: string[] = [];
   const results = { ...initialResults };
   const { FOR, RES, armeSacree, armureSacree, tirImmobile, fleau, durACuire } =
     inputs;
@@ -28,6 +32,7 @@ export const computeResults = (inputs: inputsType): outputsType => {
       ? tueNet
       : readWoundTable(d1, getIntensity(d1));
     results[result]++;
+    debug.push(`${d1}-${d1} : ${result}`);
 
     // handle non-doubles (each is counted twice, ie 1-5 & 5-1)
     dice
@@ -35,8 +40,13 @@ export const computeResults = (inputs: inputsType): outputsType => {
       .forEach((d2) => {
         const result = readWoundTable(d2, getIntensity(d1));
         results[result] += 2;
+        debug.push(`${d1}-${d2} : ${result}`);
+        debug.push(`${d2}-${d1} : ${result}`);
       });
   });
+  if (isDebug) {
+    console.log(debug.sort());
+  }
   return results;
 };
 
