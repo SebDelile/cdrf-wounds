@@ -83,6 +83,9 @@ export const woundTable: WoundTableType = {
   },
 };
 
+export type woundTableColumnType = {
+  [index in woundIntensityType]: woundResultsType;
+};
 export type WoundTableType = {
-  [index in diceType]: { [index in woundIntensityType]: woundResultsType };
+  [index in diceType]: woundTableColumnType;
 };

@@ -7,4 +7,6 @@ export type inputsType = {
   RES: number;
   armureSacree: boolean;
   durACuire: boolean;
+  immuJambes: boolean;
+  immuTete: boolean;
 };

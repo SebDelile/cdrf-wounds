@@ -21,6 +21,8 @@ export default function Home() {
     RES: 0,
     armureSacree: false,
     durACuire: false,
+    immuJambes: false,
+    immuTete: false,
   });
 
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
@@ -96,6 +98,18 @@ export default function Home() {
                   value: inputs.durACuire,
                   name: 'durACuire',
                   label: 'Dur à cuire',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.immuJambes,
+                  name: 'immuJambes',
+                  label: 'Immunité/jambes',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.immuTete,
+                  name: 'immuTete',
+                  label: 'Immunité/tête',
                 },
               ]}
               setInputs={setInputs}

@@ -1,17 +1,19 @@
 import { initialResults } from '@/constants/woundResults';
-import { woundTable } from '@/constants/woundTable';
 import { dice, diceType } from '@/constants/dice';
 import { inputsType } from '@/types/inputsType';
 import { outputsType } from '@/types/outputsType';
 import { woundIntensityType } from '@/constants/woundIntensity';
-import { woundResultsLabels, woundResultsType } from '@/constants/woundResults';
+import { woundResultsLabels } from '@/constants/woundResults';
+import { readWoundTable } from './readWoundTable';
+import { setupWoundTable } from './setupWoundTable';
 
 export const computeResults = (
   inputs: inputsType,
   isDebug: boolean
 ): outputsType => {
   const debug: string[] = [];
-  const results = [...initialResults];
+  const results = [...initialResults] as outputsType;
+  const woundTable = setupWoundTable(inputs);
   const { FOR, RES, armeSacree, armureSacree, tirImmobile, fleau, durACuire } =
     inputs;
   const getIntensity = (dice: diceType) => {
@@ -30,7 +32,7 @@ export const computeResults = (
       ? 0
       : armeSacree
       ? 5
-      : readWoundTable(d1, getIntensity(d1));
+      : readWoundTable(woundTable, d1, getIntensity(d1));
     results[result]++;
     debug.push(`${d1}-${d1} : ${woundResultsLabels[result]}`);
 
@@ -38,7 +40,7 @@ export const computeResults = (
     dice
       .filter((d2) => d2 < d1)
       .forEach((d2) => {
-        const result = readWoundTable(d2, getIntensity(d1));
+        const result = readWoundTable(woundTable, d2, getIntensity(d1));
         results[result] += 2;
         debug.push(`${d1}-${d2} : ${woundResultsLabels[result]}`);
         debug.push(`${d2}-${d1} : ${woundResultsLabels[result]}`);
@@ -49,8 +51,3 @@ export const computeResults = (
   }
   return results;
 };
-
-const readWoundTable = (
-  localization: diceType,
-  intensity: woundIntensityType
-): woundResultsType => woundTable[localization][intensity];
