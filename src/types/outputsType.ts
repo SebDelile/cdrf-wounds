@@ -1,8 +1,1 @@
-export type outputsType = {
-  rien: number;
-  sonne: number;
-  legere: number;
-  grave: number;
-  critique: number;
-  tueNet: number;
-};
+export type outputsType = [number, number, number, number, number, number];

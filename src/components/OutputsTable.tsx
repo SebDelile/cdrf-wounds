@@ -6,13 +6,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { outputsType } from '@/types/outputsType';
+import { woundResultsLabels } from '@/constants/woundResults';
 
 type propTypes = {
   outputs: outputsType;
 };
 
 export default function OutputsTable({ outputs }: propTypes) {
-  const totalOutputs = Object.values(outputs).reduce((a, b) => a + b, 0);
+  const totalOutputs = outputs.reduce((a, b) => a + b, 0);
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -24,13 +25,13 @@ export default function OutputsTable({ outputs }: propTypes) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.entries(outputs).map(([resultat, somme]) => (
-            <TableRow key={resultat}>
-              <TableCell>{resultat}</TableCell>
-              <TableCell>{somme}</TableCell>
+          {outputs.map((count, i) => (
+            <TableRow key={i}>
+              <TableCell>{woundResultsLabels[i]}</TableCell>
+              <TableCell>{count}</TableCell>
               <TableCell>
                 {totalOutputs
-                  ? `${parseFloat(((somme / totalOutputs) * 100).toFixed(1))} %`
+                  ? `${parseFloat(((count / totalOutputs) * 100).toFixed(1))} %`
                   : '-'}
               </TableCell>
             </TableRow>

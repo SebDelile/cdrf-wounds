@@ -4,7 +4,7 @@ import { outputsType } from '@/types/outputsType';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { computeResults } from '@/utils/computeResults';
-import { initialResults } from '@/constants/initialResults';
+import { initialResults } from '@/constants/woundResults';
 import OutputsTable from '@/components/OutputsTable';
 import Footer from '@/components/Footer';
 import { TYPE_CHECKBOX, TYPE_NUMBER } from '@/constants/inputsType';

@@ -1,17 +1,14 @@
-export const rien = 'rien';
-export const sonne = 'sonne';
-export const legere = 'legere';
-export const grave = 'grave';
-export const critique = 'critique';
-export const tueNet = 'tueNet';
+import { outputsType } from '@/types/outputsType';
 
-export const woundResults = [
-  rien,
-  sonne,
-  legere,
-  grave,
-  critique,
-  tueNet,
+export const woundResultsLabels = [
+  'Rien',
+  'Sonné',
+  'Légère',
+  'Grave',
+  'Critique',
+  'Tue net',
 ] as const;
 
-export type woundResultsType = (typeof woundResults)[number];
+export const initialResults = new Array(6).fill(0) as outputsType;
+
+export type woundResultsType = 0 | 1 | 2 | 3 | 4 | 5;
