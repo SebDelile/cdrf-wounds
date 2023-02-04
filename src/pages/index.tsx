@@ -1,11 +1,39 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import { inputsType } from '@/types/inputsType';
+import { outputsType } from '@/types/outputsType';
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { computeResults } from '@/utils/computeResults';
+import { woundResults } from 'src/constants/woundResults';
+import { woundTable } from '@/constants/woundTable';
+import { initialResults } from '@/constants/initialResults';
 
 export default function Home() {
+  const [isDebug, setIsDebug] = useState(false);
+  const [inputs, setInputs] = useState<inputsType>({
+    FOR: 0,
+    armeSacree: false,
+    tirImmobile: false,
+    fleau: false,
+    //
+    RES: 0,
+    armureSacree: false,
+    durACuire: false,
+  });
+
+  const [outputs, setOutputs] = useState<outputsType>(initialResults);
+
+  useEffect(() => {
+    setOutputs(computeResults(inputs, isDebug));
+  }, [inputs, isDebug]);
+
+  const handleToggleBoolean = (field: keyof inputsType) => {
+    setInputs((state) => ({
+      ...state,
+      [field]: !state[field],
+    }));
+  };
+
+  const totalOutputs = Object.values(outputs).reduce((a, b) => a + b, 0);
   return (
     <>
       <Head>
@@ -14,110 +42,120 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
-        </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
+      <main>
+        <div>
+          <label>
+            {'FOR : '}
+            <input
+              type="number"
+              value={inputs.FOR}
+              onChange={(event) => {
+                setInputs((state) => ({
+                  ...state,
+                  FOR: parseInt(event.target.value),
+                }));
+              }}
             />
-          </div>
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.armeSacree}
+              onChange={() => {
+                handleToggleBoolean('armeSacree');
+              }}
+            />
+            {'Arme sacrée'}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.tirImmobile}
+              onChange={() => {
+                handleToggleBoolean('tirImmobile');
+              }}
+            />
+            {'Tir immobile'}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.fleau}
+              onChange={() => {
+                handleToggleBoolean('fleau');
+              }}
+            />
+            {'Fleau'}
+          </label>
         </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
+        <div>
+          <label>
+            {'RES : '}
+            <input
+              type="number"
+              value={inputs.RES}
+              onChange={(event) => {
+                setInputs((state) => ({
+                  ...state,
+                  RES: parseInt(event.target.value),
+                }));
+              }}
+            />
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.armureSacree}
+              onChange={() => {
+                handleToggleBoolean('armureSacree');
+              }}
+            />
+            {'Armure sacrée'}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={inputs.durACuire}
+              onChange={() => {
+                handleToggleBoolean('durACuire');
+              }}
+            />
+            {'Dur à cuire'}
+          </label>
         </div>
+        <table>
+          <thead>
+            <tr>
+              <th>{`(${totalOutputs})`}</th>
+              <th>Somme</th>
+              <th>Proportion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(outputs).map(([resultat, somme]) => (
+              <tr key={resultat}>
+                <th>{resultat}</th>
+                <td>{somme}</td>
+                <td>
+                  {totalOutputs ? Math.round((somme / totalOutputs) * 100) : 0}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </main>
+      <footer>
+        <label>
+          <input
+            type="checkbox"
+            checked={isDebug}
+            onChange={() => {
+              setIsDebug((state) => !state);
+            }}
+          />
+          {'Debug'}
+        </label>
+      </footer>
     </>
-  )
+  );
 }
