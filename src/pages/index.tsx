@@ -1,12 +1,6 @@
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { inputsType } from '@/types/inputsType';
@@ -16,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { computeResults } from '@/utils/computeResults';
 import { initialResults } from '@/constants/initialResults';
 import { Box } from '@mui/system';
+import OutputsTable from '@/components/OutputsTable';
 
 export default function Home() {
   const [isDebug, setIsDebug] = useState(false);
@@ -45,7 +40,6 @@ export default function Home() {
     }));
   };
 
-  const totalOutputs = Object.values(outputs).reduce((a, b) => a + b, 0);
   return (
     <>
       <Head>
@@ -181,32 +175,7 @@ export default function Home() {
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>{`(${totalOutputs})`}</TableCell>
-                  <TableCell>Somme</TableCell>
-                  <TableCell>Proportion</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {Object.entries(outputs).map(([resultat, somme]) => (
-                  <TableRow key={resultat}>
-                    <TableCell>{resultat}</TableCell>
-                    <TableCell>{somme}</TableCell>
-                    <TableCell>
-                      {totalOutputs
-                        ? `${parseFloat(
-                            ((somme / totalOutputs) * 100).toFixed(1)
-                          )} %`
-                        : '-'}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <OutputsTable outputs={outputs} />
         </Grid>
       </Grid>
       <Box component="footer" sx={{ padding: '2rem' }}>
