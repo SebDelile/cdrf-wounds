@@ -9,8 +9,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { computeResults } from '@/utils/computeResults';
 import { initialResults } from '@/constants/initialResults';
-import { Box } from '@mui/system';
 import OutputsTable from '@/components/OutputsTable';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   const [isDebug, setIsDebug] = useState(false);
@@ -178,21 +178,7 @@ export default function Home() {
           <OutputsTable outputs={outputs} />
         </Grid>
       </Grid>
-      <Box component="footer" sx={{ padding: '2rem' }}>
-        <Paper sx={{ padding: '1rem' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isDebug}
-                onChange={() => {
-                  setIsDebug((state) => !state);
-                }}
-              />
-            }
-            label="Debug"
-          />
-        </Paper>
-      </Box>
+      <Footer isDebug={isDebug} setIsDebug={setIsDebug} />
     </>
   );
 }
