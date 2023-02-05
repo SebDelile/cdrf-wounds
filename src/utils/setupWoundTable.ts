@@ -5,8 +5,15 @@ import { woundTable, WoundTableType } from '@/constants/woundTable';
 import { inputsType } from '@/types/inputsType';
 
 export function setupWoundTable(inputs: inputsType): WoundTableType {
-  const { immuJambes, immuTete, epeeHache, feroce, ethere, vulnerable } =
-    inputs;
+  const {
+    immuJambes,
+    immuTete,
+    immuSonne,
+    epeeHache,
+    feroce,
+    ethere,
+    vulnerable,
+  } = inputs;
   const modifiedWoundTable = Object.fromEntries(
     dice.map((i: diceType) => [i, { ...woundTable[i] }])
   ) as WoundTableType;
@@ -31,6 +38,7 @@ export function setupWoundTable(inputs: inputsType): WoundTableType {
   }
 
   if (epeeHache || feroce || ethere || vulnerable) {
+    // no more than one shift, opposite shifts cancel themself
     mapOverColumns([...dice], (prevResult) => {
       switch (prevResult) {
         case 1:
@@ -53,5 +61,12 @@ export function setupWoundTable(inputs: inputsType): WoundTableType {
       }
     });
   }
+
+  if (immuSonne) {
+    mapOverColumns([...dice], (prevResult) =>
+      prevResult === 1 ? 0 : prevResult
+    );
+  }
+
   return modifiedWoundTable;
 }

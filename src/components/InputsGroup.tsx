@@ -19,7 +19,18 @@ type groupDetailsType<type = typeof TYPE_CHECKBOX | typeof TYPE_NUMBER> =
     : {
         type: typeof TYPE_NUMBER;
         value?: number;
-      }) & { name: keyof inputsType; label: string; disabled?: boolean };
+      }) & {
+    name: keyof inputsType;
+    label: string;
+    disabled?: boolean;
+    impliedChanges?: [
+      keyof inputsType,
+      (
+        currentfield: boolean,
+        impliedField: boolean | number
+      ) => boolean | number
+    ][];
+  };
 
 export default function InputsGroup({ setInputs, groupDetails }: propTypes) {
   return (
@@ -29,27 +40,30 @@ export default function InputsGroup({ setInputs, groupDetails }: propTypes) {
       component={Paper}
       sx={{ padding: '1rem' }}
     >
-      {groupDetails.map(({ type, name, value, label, disabled }) => (
-        <Grid item key={name}>
-          {type === TYPE_NUMBER ? (
-            <InputNumber
-              name={name}
-              value={value}
-              label={label}
-              disabled={disabled}
-              setInputs={setInputs}
-            />
-          ) : type === TYPE_CHECKBOX ? (
-            <InputCheckbox
-              name={name}
-              value={value}
-              label={label}
-              disabled={disabled}
-              setInputs={setInputs}
-            />
-          ) : null}
-        </Grid>
-      ))}
+      {groupDetails.map(
+        ({ type, name, value, label, disabled, impliedChanges }) => (
+          <Grid item key={name}>
+            {type === TYPE_NUMBER ? (
+              <InputNumber
+                name={name}
+                value={value}
+                label={label}
+                disabled={disabled}
+                setInputs={setInputs}
+              />
+            ) : type === TYPE_CHECKBOX ? (
+              <InputCheckbox
+                name={name}
+                value={value}
+                label={label}
+                disabled={disabled}
+                setInputs={setInputs}
+                impliedChanges={impliedChanges}
+              />
+            ) : null}
+          </Grid>
+        )
+      )}
     </Grid>
   );
 }

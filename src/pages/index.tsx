@@ -23,10 +23,11 @@ export default function Home() {
     RES: 0,
     armureSacree: false,
     durACuire: false,
-    immuJambes: false,
-    immuTete: false,
     ethere: false,
     vulnerable: false,
+    immuJambes: false,
+    immuTete: false,
+    immuSonne: false,
   });
 
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
@@ -65,6 +66,7 @@ export default function Home() {
                   value: inputs.armeSacree,
                   name: 'armeSacree',
                   label: 'Arme Sacrée',
+                  disabled: inputs.armureSacree,
                 },
                 {
                   type: TYPE_CHECKBOX,
@@ -108,12 +110,33 @@ export default function Home() {
                   value: inputs.armureSacree,
                   name: 'armureSacree',
                   label: 'Armure Sacrée',
+                  impliedChanges: [
+                    [
+                      'armeSacree',
+                      (newState, prevFieldState) =>
+                        newState ? false : prevFieldState,
+                    ],
+                  ],
                 },
                 {
                   type: TYPE_CHECKBOX,
                   value: inputs.durACuire,
                   name: 'durACuire',
                   label: 'Dur à cuire',
+                },
+
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.ethere,
+                  name: 'ethere',
+                  label: 'Ethéré',
+                  impliedChanges: [['immuSonne', (newState) => newState]],
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.vulnerable,
+                  name: 'vulnerable',
+                  label: 'Vulnérable',
                 },
                 {
                   type: TYPE_CHECKBOX,
@@ -129,15 +152,10 @@ export default function Home() {
                 },
                 {
                   type: TYPE_CHECKBOX,
-                  value: inputs.ethere,
-                  name: 'ethere',
-                  label: 'Ethéré',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.vulnerable,
-                  name: 'vulnerable',
-                  label: 'Vulnérable',
+                  value: inputs.immuSonne,
+                  name: 'immuSonne',
+                  label: 'Immunité/Sonné',
+                  disabled: inputs.ethere,
                 },
               ]}
               setInputs={setInputs}

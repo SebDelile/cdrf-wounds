@@ -9,8 +9,9 @@ export type inputsType = {
   RES: number;
   armureSacree: boolean;
   durACuire: boolean;
-  immuJambes: boolean;
-  immuTete: boolean;
   ethere: boolean;
   vulnerable: boolean;
+  immuJambes: boolean;
+  immuTete: boolean;
+  immuSonne: boolean;
 };
