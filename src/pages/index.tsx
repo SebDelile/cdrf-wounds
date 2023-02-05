@@ -17,12 +17,16 @@ export default function Home() {
     armeSacree: false,
     tirImmobile: false,
     fleau: false,
+    feroce: false,
+    epeeHache: false,
     //
     RES: 0,
     armureSacree: false,
     durACuire: false,
     immuJambes: false,
     immuTete: false,
+    ethere: false,
+    vulnerable: false,
   });
 
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
@@ -74,6 +78,18 @@ export default function Home() {
                   name: 'fleau',
                   label: 'Fléau',
                 },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.feroce,
+                  name: 'feroce',
+                  label: 'Féroce',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.epeeHache,
+                  name: 'epeeHache',
+                  label: 'Epée-hache',
+                },
               ]}
               setInputs={setInputs}
             />
@@ -110,6 +126,18 @@ export default function Home() {
                   value: inputs.immuTete,
                   name: 'immuTete',
                   label: 'Immunité/tête',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.ethere,
+                  name: 'ethere',
+                  label: 'Ethéré',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.vulnerable,
+                  name: 'vulnerable',
+                  label: 'Vulnérable',
                 },
               ]}
               setInputs={setInputs}
