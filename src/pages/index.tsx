@@ -19,6 +19,7 @@ export default function Home() {
     fleau: false,
     feroce: false,
     epeeHache: false,
+    vapeurFOR: false,
     //
     RES: 0,
     armureSacree: false,
@@ -91,6 +92,12 @@ export default function Home() {
                   value: inputs.epeeHache,
                   name: 'epeeHache',
                   label: 'Epée-hache',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.vapeurFOR,
+                  name: 'vapeurFOR',
+                  label: 'Vapeur/FOR',
                 },
               ]}
               setInputs={setInputs}

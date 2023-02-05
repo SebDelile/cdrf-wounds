@@ -5,6 +5,7 @@ export type inputsType = {
   fleau: boolean;
   feroce: boolean;
   epeeHache: boolean;
+  vapeurFOR: boolean;
   //
   RES: number;
   armureSacree: boolean;
