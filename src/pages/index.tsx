@@ -7,7 +7,11 @@ import { computeResults } from '@/utils/computeResults';
 import { initialResults } from '@/constants/woundResults';
 import OutputsTable from '@/components/OutputsTable';
 import Footer from '@/components/Footer';
-import { TYPE_CHECKBOX, TYPE_NUMBER } from '@/constants/inputsType';
+import {
+  TYPE_CHECKBOX,
+  TYPE_CHECKBOX_AND_VALUE,
+  TYPE_NUMBER,
+} from '@/constants/inputsType';
 import InputsGroup from '@/components/InputsGroup';
 
 export default function Home() {
@@ -20,6 +24,7 @@ export default function Home() {
     feroce: false,
     epeeHache: false,
     vapeurFOR: false,
+    toxique: null,
     //
     RES: 0,
     armureSacree: false,
@@ -98,6 +103,13 @@ export default function Home() {
                   value: inputs.vapeurFOR,
                   name: 'vapeurFOR',
                   label: 'Vapeur/FOR',
+                },
+                {
+                  type: TYPE_CHECKBOX_AND_VALUE,
+                  value: inputs.toxique,
+                  name: 'toxique',
+                  label: 'Toxique/X',
+                  range: [0, 6],
                 },
               ]}
               setInputs={setInputs}

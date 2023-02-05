@@ -23,6 +23,9 @@ export const computeResults = (
     fleau,
     durACuire,
     vapeurFOR,
+    ethere,
+    vulnerable,
+    toxique,
   } = inputs;
 
   (vapeurFOR ? dice : [0]).forEach((vapeurBonus) => {
@@ -57,8 +60,35 @@ export const computeResults = (
         });
     });
   });
+
+  if (toxique !== null && Number.isInteger(toxique)) {
+    const woundsAfterToxic = [2, 3, 4, 5].flatMap((i) => [
+      // tuple is : [new localization, amount of results]
+      [
+        Math.min(1 + i + Number(vulnerable) - Number(ethere), 5),
+        (1 - toxique / 6) * results[i], // toxic test failed
+      ],
+      [
+        Math.min(2 + i + Number(vulnerable) - Number(ethere), 5),
+        (toxique / 6) * results[i], //toxic test successed
+      ],
+    ]);
+    [2, 3, 4, 5].forEach((i) => {
+      results[i] = woundsAfterToxic.reduce(
+        (acc, cur) => (cur[0] === i ? acc + cur[1] : acc),
+        0
+      );
+    });
+  }
+
   if (isDebug) {
     console.log(debug.sort());
+    if (Number.isInteger(toxique)) {
+      console.log(
+        "attention toxique n'est pas pris en compte dans ces résultats"
+      );
+    }
   }
+
   return results;
 };

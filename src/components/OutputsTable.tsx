@@ -28,7 +28,7 @@ export default function OutputsTable({ outputs }: propTypes) {
           {outputs.map((count, i) => (
             <TableRow key={i}>
               <TableCell>{woundResultsLabels[i]}</TableCell>
-              <TableCell>{count}</TableCell>
+              <TableCell>{parseFloat(count.toFixed(2))}</TableCell>
               <TableCell>
                 {totalOutputs
                   ? `${parseFloat(((count / totalOutputs) * 100).toFixed(1))} %`

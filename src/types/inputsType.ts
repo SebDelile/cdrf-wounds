@@ -1,3 +1,5 @@
+import { diceType } from '@/constants/dice';
+
 export type inputsType = {
   FOR: number;
   armeSacree: boolean;
@@ -6,6 +8,7 @@ export type inputsType = {
   feroce: boolean;
   epeeHache: boolean;
   vapeurFOR: boolean;
+  toxique: null | 0 | diceType;
   //
   RES: number;
   armureSacree: boolean;

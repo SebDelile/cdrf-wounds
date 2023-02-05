@@ -10,7 +10,10 @@ type propTypes = {
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
   impliedChanges?: [
     keyof inputsType,
-    (currentfield: boolean, impliedField: boolean | number) => boolean | number
+    (
+      currentfield: boolean,
+      impliedField: null | boolean | number
+    ) => null | boolean | number
   ][];
 };
 
