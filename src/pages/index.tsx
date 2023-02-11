@@ -13,6 +13,10 @@ import {
   TYPE_NUMBER,
 } from '@/constants/inputsType';
 import InputsGroup from '@/components/InputsGroup';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { Paper } from '@mui/material';
 
 export default function Home() {
   const [isDebug, setIsDebug] = useState(false);
@@ -37,6 +41,7 @@ export default function Home() {
   });
 
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
+  const [currentTab, setCurrentTab] = useState<number>(0);
 
   useEffect(() => {
     if (Number.isInteger(inputs.FOR) && Number.isInteger(inputs.RES)) {
@@ -182,7 +187,31 @@ export default function Home() {
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          <OutputsTable outputs={outputs} />
+          <Paper>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs
+                value={currentTab}
+                onChange={(_, newValue) => setCurrentTab(newValue)}
+              >
+                <Tab label="Graph répartition" />
+                <Tab label="Graph cumulé" />
+                <Tab label="Tableau" />
+              </Tabs>
+            </Box>
+            {[
+              <Box sx={{ p: 3 }} key={0}>
+                tab 0
+              </Box>,
+              <Box sx={{ p: 3 }} key={1}>
+                tab 1
+              </Box>,
+              <OutputsTable key={2} outputs={outputs} />,
+            ].map((child, index) => (
+              <div key={index} role="tabpanel" hidden={currentTab !== index}>
+                {currentTab === index ? child : null}
+              </div>
+            ))}
+          </Paper>
         </Grid>
       </Grid>
       <Footer isDebug={isDebug} setIsDebug={setIsDebug} />
