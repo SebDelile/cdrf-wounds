@@ -8,6 +8,13 @@ type propTypes = {
   label: string;
   disabled?: boolean;
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
+  impliedChanges?: [
+    keyof inputsType,
+    (
+      currentfield: boolean,
+      impliedField: null | boolean | number
+    ) => null | boolean | number
+  ][];
 };
 
 export default function InputCheckbox({
@@ -16,6 +23,7 @@ export default function InputCheckbox({
   label,
   disabled,
   setInputs,
+  impliedChanges,
 }: propTypes) {
   return (
     <FormControlLabel
@@ -23,10 +31,20 @@ export default function InputCheckbox({
         <Checkbox
           checked={value}
           onChange={() => {
-            setInputs((state) => ({
-              ...state,
-              [name]: !state[name],
-            }));
+            setInputs((state) => {
+              const newState = !state[name];
+              return {
+                ...state,
+                [name]: newState,
+                ...(impliedChanges &&
+                  Object.fromEntries(
+                    impliedChanges.map(([field, callback]) => [
+                      field,
+                      callback(newState, state[field]),
+                    ])
+                  )),
+              };
+            });
           }}
         />
       }

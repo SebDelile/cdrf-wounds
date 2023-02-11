@@ -4,11 +4,19 @@ import { outputsType } from '@/types/outputsType';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { computeResults } from '@/utils/computeResults';
-import { initialResults } from '@/constants/initialResults';
+import { initialResults } from '@/constants/woundResults';
 import OutputsTable from '@/components/OutputsTable';
 import Footer from '@/components/Footer';
-import { TYPE_CHECKBOX, TYPE_NUMBER } from '@/constants/inputsType';
+import {
+  TYPE_CHECKBOX,
+  TYPE_CHECKBOX_AND_VALUE,
+  TYPE_NUMBER,
+} from '@/constants/inputsType';
 import InputsGroup from '@/components/InputsGroup';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { Paper } from '@mui/material';
 
 export default function Home() {
   const [isDebug, setIsDebug] = useState(false);
@@ -17,13 +25,23 @@ export default function Home() {
     armeSacree: false,
     tirImmobile: false,
     fleau: false,
+    feroce: false,
+    epeeHache: false,
+    vapeurFOR: false,
+    toxique: null,
     //
     RES: 0,
     armureSacree: false,
     durACuire: false,
+    ethere: false,
+    vulnerable: false,
+    immuJambes: false,
+    immuTete: false,
+    immuSonne: false,
   });
 
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
+  const [currentTab, setCurrentTab] = useState<number>(0);
 
   useEffect(() => {
     if (Number.isInteger(inputs.FOR) && Number.isInteger(inputs.RES)) {
@@ -59,6 +77,7 @@ export default function Home() {
                   value: inputs.armeSacree,
                   name: 'armeSacree',
                   label: 'Arme Sacrée',
+                  disabled: inputs.armureSacree,
                 },
                 {
                   type: TYPE_CHECKBOX,
@@ -71,6 +90,31 @@ export default function Home() {
                   value: inputs.fleau,
                   name: 'fleau',
                   label: 'Fléau',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.feroce,
+                  name: 'feroce',
+                  label: 'Féroce',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.epeeHache,
+                  name: 'epeeHache',
+                  label: 'Epée-hache',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.vapeurFOR,
+                  name: 'vapeurFOR',
+                  label: 'Vapeur/FOR',
+                },
+                {
+                  type: TYPE_CHECKBOX_AND_VALUE,
+                  value: inputs.toxique,
+                  name: 'toxique',
+                  label: 'Toxique/X',
+                  range: [0, 6],
                 },
               ]}
               setInputs={setInputs}
@@ -90,6 +134,13 @@ export default function Home() {
                   value: inputs.armureSacree,
                   name: 'armureSacree',
                   label: 'Armure Sacrée',
+                  impliedChanges: [
+                    [
+                      'armeSacree',
+                      (newState, prevFieldState) =>
+                        newState ? false : prevFieldState,
+                    ],
+                  ],
                 },
                 {
                   type: TYPE_CHECKBOX,
@@ -97,13 +148,70 @@ export default function Home() {
                   name: 'durACuire',
                   label: 'Dur à cuire',
                 },
+
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.ethere,
+                  name: 'ethere',
+                  label: 'Ethéré',
+                  impliedChanges: [['immuSonne', (newState) => newState]],
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.vulnerable,
+                  name: 'vulnerable',
+                  label: 'Vulnérable',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.immuJambes,
+                  name: 'immuJambes',
+                  label: 'Immunité/jambes',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.immuTete,
+                  name: 'immuTete',
+                  label: 'Immunité/tête',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.immuSonne,
+                  name: 'immuSonne',
+                  label: 'Immunité/Sonné',
+                  disabled: inputs.ethere,
+                },
               ]}
               setInputs={setInputs}
             />
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          <OutputsTable outputs={outputs} />
+          <Paper>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs
+                value={currentTab}
+                onChange={(_, newValue) => setCurrentTab(newValue)}
+              >
+                <Tab label="Graph répartition" />
+                <Tab label="Graph cumulé" />
+                <Tab label="Tableau" />
+              </Tabs>
+            </Box>
+            {[
+              <Box sx={{ p: 3 }} key={0}>
+                tab 0
+              </Box>,
+              <Box sx={{ p: 3 }} key={1}>
+                tab 1
+              </Box>,
+              <OutputsTable key={2} outputs={outputs} />,
+            ].map((child, index) => (
+              <div key={index} role="tabpanel" hidden={currentTab !== index}>
+                {currentTab === index ? child : null}
+              </div>
+            ))}
+          </Paper>
         </Grid>
       </Grid>
       <Footer isDebug={isDebug} setIsDebug={setIsDebug} />

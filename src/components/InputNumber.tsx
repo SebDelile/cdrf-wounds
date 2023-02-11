@@ -6,6 +6,7 @@ type propTypes = {
   name: keyof inputsType;
   label: string;
   disabled?: boolean;
+  range?: [number, number];
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
 };
 
@@ -14,6 +15,7 @@ export default function InputNumber({
   name,
   label,
   disabled,
+  range,
   setInputs,
 }: propTypes) {
   return (
@@ -30,7 +32,14 @@ export default function InputNumber({
       }}
       disabled={disabled}
       error={!Number.isInteger(value)}
-      helperText={!Number.isInteger(value) ? `${name} est obligatoire` : null}
+      helperText={!Number.isInteger(value) ? `${label} est obligatoire` : null}
+      inputProps={{
+        ...(range && {
+          min: range[0],
+          max: range[1],
+        }),
+      }}
+      sx={{ width: '100%', maxWidth: '150px' }}
     />
   );
 }
