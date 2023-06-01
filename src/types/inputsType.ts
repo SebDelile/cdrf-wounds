@@ -1,5 +1,6 @@
 import { diceType } from '@/constants/dice';
 
+// the form input types
 export type inputsType = {
   FOR: number;
   armeSacree: boolean;

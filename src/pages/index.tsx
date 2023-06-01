@@ -19,7 +19,7 @@ import Tab from '@mui/material/Tab';
 import { Paper } from '@mui/material';
 
 export default function Home() {
-  const [isDebug, setIsDebug] = useState(false);
+  // inputs is the state of the form
   const [inputs, setInputs] = useState<inputsType>({
     FOR: 0,
     armeSacree: false,
@@ -40,9 +40,12 @@ export default function Home() {
     immuSonne: false,
   });
 
+  // outputs is the result of the calculation
   const [outputs, setOutputs] = useState<outputsType>(initialResults);
+  const [isDebug, setIsDebug] = useState(false);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
+  // update the results on any change
   useEffect(() => {
     if (Number.isInteger(inputs.FOR) && Number.isInteger(inputs.RES)) {
       setOutputs(computeResults(inputs, isDebug));
