@@ -17,6 +17,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Paper } from '@mui/material';
+import BarGraph from '@/components/BarGraph';
 
 export default function Home() {
   // inputs is the state of the form
@@ -202,8 +203,11 @@ export default function Home() {
               </Tabs>
             </Box>
             {[
-              <Box sx={{ p: 3 }} key={0}>
-                tab 0
+              <Box
+                sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
+                key={0}
+              >
+                <BarGraph outputs={outputs} />
               </Box>,
               <Box sx={{ p: 3 }} key={1}>
                 tab 1
