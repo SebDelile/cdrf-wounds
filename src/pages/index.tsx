@@ -18,6 +18,10 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Paper } from '@mui/material';
 import BarGraph from '@/components/BarGraph';
+import {
+  getFormattedOutputsAsCumulativePercentage,
+  getFormattedOutputsAsPercentage,
+} from '@/utils/getFormattedOutputs';
 
 export default function Home() {
   // inputs is the state of the form
@@ -207,10 +211,15 @@ export default function Home() {
                 sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
                 key={0}
               >
-                <BarGraph outputs={outputs} />
+                <BarGraph data={getFormattedOutputsAsPercentage(outputs)} />
               </Box>,
-              <Box sx={{ p: 3 }} key={1}>
-                tab 1
+              <Box
+                sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
+                key={0}
+              >
+                <BarGraph
+                  data={getFormattedOutputsAsCumulativePercentage(outputs)}
+                />
               </Box>,
               <OutputsTable key={2} outputs={outputs} />,
             ].map((child, index) => (
