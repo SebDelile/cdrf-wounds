@@ -8,8 +8,8 @@ type propTypes = {
   hideFirstValue?: boolean;
 };
 
-const GRAPH_HEIGHT = 250;
-const GRAPH_WIDTH = 350;
+const CHART_HEIGHT = 300;
+const CHART_WIDTH = 450;
 
 const BAR_COLORS = [
   '#F5C5C5',
@@ -20,47 +20,47 @@ const BAR_COLORS = [
   '#2AA0606',
 ];
 
-export default function BarGraph({ data, hideFirstValue = false }: propTypes) {
+export default function BarChart({ data, hideFirstValue = false }: propTypes) {
   const svgNode = useRef(null);
 
-  // initialize graph
+  // initialize chart
   useEffect(() => {
     const hasResults = data.some((d) => !!d);
     if (svgNode.current && hasResults) {
       // format the data
-      const graphData = data.map((value, i) => ({
+      const chartData = data.map((value, i) => ({
         label: woundResultsLabels[i],
         value,
         color: BAR_COLORS[i],
       }));
-      if (hideFirstValue) graphData.shift();
+      if (hideFirstValue) chartData.shift();
 
       const svg = d3.select(svgNode.current);
 
       // make the X axis
       const x = d3
         .scaleBand()
-        .range([0, GRAPH_WIDTH])
-        .domain(graphData.map(({ label }) => label))
+        .range([0, CHART_WIDTH])
+        .domain(chartData.map(({ label }) => label))
         .padding(0.2);
       svg
         .append('g')
-        .attr('transform', `translate(0,${GRAPH_HEIGHT})`)
+        .attr('transform', `translate(0,${CHART_HEIGHT})`)
         .call(d3.axisBottom(x));
 
       // make the Y axis
-      // *1.08 is to be sure the label fit inside the graph
+      // *1.08 is to be sure the label fit inside the chart
       const yAxisUpperLimit =
         Math.ceil(
-          ((d3.max(graphData.map(({ value }) => value)) ?? 0) * 1.08) / 10
+          ((d3.max(chartData.map(({ value }) => value)) ?? 0) * 1.08) / 10
         ) * 10;
       const y = d3
         .scaleLinear()
         .domain([0, yAxisUpperLimit])
-        .range([GRAPH_HEIGHT, 0]);
+        .range([CHART_HEIGHT, 0]);
       svg
         .append('g')
-        .call(d3.axisLeft(y).tickSize(-GRAPH_WIDTH))
+        .call(d3.axisLeft(y).tickSize(-CHART_WIDTH))
         .selectAll('.tick line')
         .attr('stroke', '#BBB')
         .attr('stroke-dasharray', 4)
@@ -68,16 +68,16 @@ export default function BarGraph({ data, hideFirstValue = false }: propTypes) {
         .filter((line) => line === 0 || line === yAxisUpperLimit)
         .attr('stroke', 'none');
 
-      //add a right line to the graph
+      //add a right line to the chart
       svg
         .append('g')
         .call(d3.axisRight(y).tickValues([]).tickSize(0))
-        .attr('transform', `translate(${GRAPH_WIDTH},0)`);
+        .attr('transform', `translate(${CHART_WIDTH},0)`);
 
-      // pop the rect in the graphs
+      // pop the rect in the charts
       svg
         .selectAll('.bars')
-        .data(graphData)
+        .data(chartData)
         .enter()
         .append('rect')
         .attr('class', 'bars')
@@ -85,14 +85,14 @@ export default function BarGraph({ data, hideFirstValue = false }: propTypes) {
         .attr('x', (d) => x(d.label)!)
         .attr('y', (d) => y(d.value))
         .attr('width', x.bandwidth())
-        .attr('height', (d) => GRAPH_HEIGHT - y(d.value))
+        .attr('height', (d) => CHART_HEIGHT - y(d.value))
         .attr('stroke', 'black')
         .attr('fill', (d) => d.color);
 
       // add labels to the rect
       svg
         .selectAll('.label')
-        .data(graphData)
+        .data(chartData)
         .enter()
         .append('text')
         .attr('class', 'label')
@@ -110,5 +110,7 @@ export default function BarGraph({ data, hideFirstValue = false }: propTypes) {
     }
   }, [data, hideFirstValue]);
 
-  return <svg ref={svgNode} width="400px" height="300px" />;
+  return (
+    <svg ref={svgNode} width={CHART_WIDTH + 20} height={CHART_HEIGHT + 20} />
+  );
 }

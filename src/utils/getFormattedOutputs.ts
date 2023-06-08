@@ -1,5 +1,5 @@
 import { outputsType } from '@/types/outputsType';
-// functions to format the outputs to be displayed in the table / graph
+// functions to format the outputs to be displayed in the table / chart
 
 export const getFormattedOutputs = (outputs: outputsType): outputsType =>
   // non-integer are possible here due to toxique

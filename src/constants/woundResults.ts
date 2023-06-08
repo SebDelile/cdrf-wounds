@@ -1,6 +1,6 @@
 import { outputsType } from '@/types/outputsType';
 
-// same position as in outputsType, used in the graph and table
+// same position as in outputsType, used in the chart and table
 export const woundResultsLabels = [
   'Rien',
   'Sonné',

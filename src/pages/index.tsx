@@ -17,7 +17,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Paper } from '@mui/material';
-import BarGraph from '@/components/BarGraph';
+import BarChart from '@/components/BarChart';
 import {
   getFormattedOutputsAsCumulativePercentage,
   getFormattedOutputsAsPercentage,
@@ -201,8 +201,8 @@ export default function Home() {
                 value={currentTab}
                 onChange={(_, newValue) => setCurrentTab(newValue)}
               >
-                <Tab label="Graph répartition" />
-                <Tab label="Graph cumulé" />
+                <Tab label="Graph proportion" />
+                <Tab label="Graph proportion cumulée" />
                 <Tab label="Tableau" />
               </Tabs>
             </Box>
@@ -211,13 +211,13 @@ export default function Home() {
                 sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
                 key={0}
               >
-                <BarGraph data={getFormattedOutputsAsPercentage(outputs)} />
+                <BarChart data={getFormattedOutputsAsPercentage(outputs)} />
               </Box>,
               <Box
                 sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
                 key={0}
               >
-                <BarGraph
+                <BarChart
                   data={getFormattedOutputsAsCumulativePercentage(outputs)}
                   hideFirstValue={true}
                 />
