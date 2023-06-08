@@ -5,6 +5,7 @@ import { woundResultsLabels, woundResultsType } from '@/constants/woundResults';
 
 type propTypes = {
   data: outputsType;
+  hideFirstValue?: boolean;
 };
 
 const GRAPH_HEIGHT = 250;
@@ -19,20 +20,28 @@ const BAR_COLORS = [
   '#2AA0606',
 ];
 
-export default function BarGraph({ data }: propTypes) {
+export default function BarGraph({ data, hideFirstValue = false }: propTypes) {
   const svgNode = useRef(null);
 
   // initialize graph
   useEffect(() => {
     const hasResults = data.some((d) => !!d);
     if (svgNode.current && hasResults) {
+      // format the data
+      const graphData = data.map((value, i) => ({
+        label: woundResultsLabels[i],
+        value,
+        color: BAR_COLORS[i],
+      }));
+      if (hideFirstValue) graphData.shift();
+
       const svg = d3.select(svgNode.current);
 
       // make the X axis
       const x = d3
         .scaleBand()
         .range([0, GRAPH_WIDTH])
-        .domain(woundResultsLabels)
+        .domain(graphData.map(({ label }) => label))
         .padding(0.2);
       svg
         .append('g')
@@ -41,7 +50,10 @@ export default function BarGraph({ data }: propTypes) {
 
       // make the Y axis
       // *1.08 is to be sure the label fit inside the graph
-      const yAxisUpperLimit = Math.ceil(((d3.max(data) ?? 0) * 1.08) / 10) * 10;
+      const yAxisUpperLimit =
+        Math.ceil(
+          ((d3.max(graphData.map(({ value }) => value)) ?? 0) * 1.08) / 10
+        ) * 10;
       const y = d3
         .scaleLinear()
         .domain([0, yAxisUpperLimit])
@@ -65,38 +77,38 @@ export default function BarGraph({ data }: propTypes) {
       // pop the rect in the graphs
       svg
         .selectAll('.bars')
-        .data(data)
+        .data(graphData)
         .enter()
         .append('rect')
         .attr('class', 'bars')
         // the exclamation mark fix a typescript issue to remove undefined from union
-        .attr('x', (_, i) => x(woundResultsLabels[i as woundResultsType])!)
-        .attr('y', (d) => y(d))
+        .attr('x', (d) => x(d.label)!)
+        .attr('y', (d) => y(d.value))
         .attr('width', x.bandwidth())
-        .attr('height', (d) => GRAPH_HEIGHT - y(d))
+        .attr('height', (d) => GRAPH_HEIGHT - y(d.value))
         .attr('stroke', 'black')
-        .attr('fill', (_, i) => BAR_COLORS[i as woundResultsType]);
+        .attr('fill', (d) => d.color);
 
       // add labels to the rect
       svg
         .selectAll('.label')
-        .data(data)
+        .data(graphData)
         .enter()
         .append('text')
         .attr('class', 'label')
         .attr('text-anchor', 'middle')
-        .attr('x', (_, i) => x(woundResultsLabels[i as woundResultsType])!)
+        .attr('x', (d) => x(d.label)!)
         .attr('dx', x.bandwidth() / 2)
-        .attr('y', (d) => y(d))
+        .attr('y', (d) => y(d.value))
         .attr('dy', '-0.25em')
-        .text((d) => `${d} %`);
+        .text((d) => `${d.value} %`);
 
       return () => {
         // clean everything between renders
         svg.selectAll('*').remove();
       };
     }
-  }, [data]);
+  }, [data, hideFirstValue]);
 
   return <svg ref={svgNode} width="400px" height="300px" />;
 }

@@ -219,6 +219,7 @@ export default function Home() {
               >
                 <BarGraph
                   data={getFormattedOutputsAsCumulativePercentage(outputs)}
+                  hideFirstValue={true}
                 />
               </Box>,
               <OutputsTable key={2} outputs={outputs} />,
