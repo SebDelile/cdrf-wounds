@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { outputsType } from '@/types/outputsType';
-import { woundResultsLabels, woundResultsType } from '@/constants/woundResults';
+import { initialResults, woundResultsLabels } from '@/constants/woundResults';
+import { usePrevious } from '@/utils/usePrevious';
 
 type propTypes = {
   data: outputsType;
@@ -10,6 +11,7 @@ type propTypes = {
 
 const CHART_HEIGHT = 300;
 const CHART_WIDTH = 450;
+const TRANSITION_DURATION = 500;
 
 const BAR_COLORS = [
   '#F5C5C5',
@@ -22,15 +24,16 @@ const BAR_COLORS = [
 
 export default function BarChart({ data, hideFirstValue = false }: propTypes) {
   const svgNode = useRef(null);
+  const previousData = usePrevious(data, initialResults);
 
-  // initialize chart
+  // build the chart
   useEffect(() => {
-    const hasResults = data.some((d) => !!d);
-    if (svgNode.current && hasResults) {
+    if (svgNode.current) {
       // format the data
       const chartData = data.map((value, i) => ({
         label: woundResultsLabels[i],
         value,
+        prevValue: previousData[i],
         color: BAR_COLORS[i],
       }));
       if (hideFirstValue) chartData.shift();
@@ -52,7 +55,7 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
       // *1.08 is to be sure the label fit inside the chart
       const yAxisUpperLimit =
         Math.ceil(
-          ((d3.max(chartData.map(({ value }) => value)) ?? 0) * 1.08) / 10
+          (d3.max(chartData.map(({ value }) => value)) ?? 100 * 1.08) / 10
         ) * 10;
       const y = d3
         .scaleLinear()
@@ -81,13 +84,18 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
         .enter()
         .append('rect')
         .attr('class', 'bars')
+        .attr('stroke', 'black')
+        .attr('fill', (d) => d.color)
         // the exclamation mark fix a typescript issue to remove undefined from union
         .attr('x', (d) => x(d.label)!)
-        .attr('y', (d) => y(d.value))
         .attr('width', x.bandwidth())
-        .attr('height', (d) => CHART_HEIGHT - y(d.value))
-        .attr('stroke', 'black')
-        .attr('fill', (d) => d.color);
+        .attr('y', (d) => y(d.prevValue))
+        .attr('height', (d) => CHART_HEIGHT - y(d.prevValue))
+        .transition()
+        .duration(TRANSITION_DURATION)
+        .ease(d3.easeCubicOut)
+        .attr('y', (d) => y(d.value))
+        .attr('height', (d) => CHART_HEIGHT - y(d.value));
 
       // add labels to the rect
       svg
@@ -99,16 +107,20 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
         .attr('text-anchor', 'middle')
         .attr('x', (d) => x(d.label)!)
         .attr('dx', x.bandwidth() / 2)
-        .attr('y', (d) => y(d.value))
         .attr('dy', '-0.25em')
-        .text((d) => `${d.value} %`);
+        .text((d) => `${d.value} %`)
+        .attr('y', (d) => y(d.prevValue))
+        .transition()
+        .duration(TRANSITION_DURATION)
+        .ease(d3.easeCubicOut)
+        .attr('y', (d) => y(d.value));
 
       return () => {
         // clean everything between renders
         svg.selectAll('*').remove();
       };
     }
-  }, [data, hideFirstValue]);
+  }, [data, previousData, hideFirstValue]);
 
   return (
     <svg ref={svgNode} width={CHART_WIDTH + 20} height={CHART_HEIGHT + 20} />
