@@ -11,7 +11,6 @@ type propTypes = {
 
 const CHART_HEIGHT = 300;
 const CHART_WIDTH = 450;
-const TRANSITION_DURATION = 500;
 
 const BAR_COLORS = [
   '#F5C5C5',
@@ -31,12 +30,18 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
     if (svgNode.current) {
       // format the data
       const chartData = data.map((value, i) => ({
-        label: woundResultsLabels[i],
+        label: `${woundResultsLabels[i]}${
+          hideFirstValue && i !== 5 ? ' ou +' : ''
+        }`,
         value,
         prevValue: previousData[i],
         color: BAR_COLORS[i],
       }));
       if (hideFirstValue) chartData.shift();
+      const chartTransition = d3
+        .transition()
+        .duration(500)
+        .ease(d3.easeCubicOut);
 
       const svg = d3.select(svgNode.current);
 
@@ -55,18 +60,31 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
       // *1.08 is to be sure the label fit inside the chart
       const yAxisUpperLimit =
         Math.ceil(
-          (d3.max(chartData.map(({ value }) => value)) ?? 100 * 1.08) / 10
+          ((d3.max(chartData.map(({ value }) => value)) ?? 100) * 1.08) / 10
         ) * 10;
       const y = d3
         .scaleLinear()
         .domain([0, yAxisUpperLimit])
         .range([CHART_HEIGHT, 0]);
+      // prevYAxis is used for the animation
+      const previousYAxisUpperLimit =
+        Math.ceil(
+          ((d3.max(chartData.map(({ prevValue }) => prevValue)) ?? 100) *
+            1.08) /
+            10
+        ) * 10;
+      const prevY = d3
+        .scaleLinear()
+        .domain([0, previousYAxisUpperLimit])
+        .range([CHART_HEIGHT, 0]);
       svg
         .append('g')
+        .attr('id', 'yaxis')
+        .call(d3.axisLeft(prevY).tickSize(-CHART_WIDTH))
+        .transition(chartTransition)
         .call(d3.axisLeft(y).tickSize(-CHART_WIDTH))
         .selectAll('.tick line')
-        .attr('stroke', '#BBB')
-        .attr('stroke-dasharray', 4)
+        .attr('stroke', '#CCC')
         .attr('stroke-width', 1)
         .filter((line) => line === 0 || line === yAxisUpperLimit)
         .attr('stroke', 'none');
@@ -91,9 +109,7 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
         .attr('width', x.bandwidth())
         .attr('y', (d) => y(d.prevValue))
         .attr('height', (d) => CHART_HEIGHT - y(d.prevValue))
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .ease(d3.easeCubicOut)
+        .transition(chartTransition)
         .attr('y', (d) => y(d.value))
         .attr('height', (d) => CHART_HEIGHT - y(d.value));
 
@@ -110,9 +126,7 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
         .attr('dy', '-0.25em')
         .text((d) => `${d.value} %`)
         .attr('y', (d) => y(d.prevValue))
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .ease(d3.easeCubicOut)
+        .transition(chartTransition)
         .attr('y', (d) => y(d.value));
 
       return () => {
