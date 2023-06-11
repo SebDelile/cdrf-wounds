@@ -27,6 +27,7 @@ export default function Home() {
   // inputs is the state of the form
   const [inputs, setInputs] = useState<inputsType>({
     FOR: 0,
+    jetAmplifie: false,
     armeSacree: false,
     tirImmobile: false,
     fleau: false,
@@ -36,6 +37,7 @@ export default function Home() {
     toxique: null,
     //
     RES: 0,
+    jetAttenue: false,
     armureSacree: false,
     durACuire: false,
     ethere: false,
@@ -79,6 +81,13 @@ export default function Home() {
                   value: inputs.FOR,
                   name: 'FOR',
                   label: 'FOR',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.jetAmplifie,
+                  name: 'jetAmplifie',
+                  label: 'Jet Amplifié',
+                  disabled: inputs.jetAttenue,
                 },
                 {
                   type: TYPE_CHECKBOX,
@@ -136,6 +145,13 @@ export default function Home() {
                   value: inputs.RES,
                   name: 'RES',
                   label: 'RES',
+                },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.jetAttenue,
+                  name: 'jetAttenue',
+                  label: 'Jet Atténué',
+                  disabled: inputs.jetAmplifie,
                 },
                 {
                   type: TYPE_CHECKBOX,

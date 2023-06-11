@@ -18,6 +18,8 @@ export const computeResults = (
   const {
     FOR,
     RES,
+    jetAmplifie,
+    jetAttenue,
     armeSacree,
     armureSacree,
     tirImmobile,
@@ -29,9 +31,10 @@ export const computeResults = (
     toxique,
   } = inputs;
 
+  const has3dice = jetAmplifie || jetAttenue;
+
   // if vapeurFOR, we wrap with an additionnal loop with FOR+1 to FOR+6 around the logic
   (vapeurFOR ? dice : [0]).forEach((vapeurBonus) => {
-    
     // the result FOR-RES+1d6 (+Vapeur) with row modifiers
     // /2 is because the woundIntensity is from -1 to 9 (divided by 2 as compared to original wound table)
     const getIntensity = (dice: diceType) => {
@@ -52,18 +55,61 @@ export const computeResults = (
         : armeSacree
         ? 5
         : readWoundTable(woundTable, d1, getIntensity(d1));
+      // handle dice are all same (triple for 3 dice roll, double, for 2 dice roll)
       results[result]++;
-      debug.push(`${d1}-${d1} : ${woundResultsLabels[result]}`);
+      debug.push(
+        `${d1}-${d1}${has3dice ? `-${d1}` : ''} : ${woundResultsLabels[result]}`
+      );
+      // handle other doubles for 3 dice rolls (only double with the 2 dice being used)
+      if (has3dice) {
+        dice
+          .filter((d3) => (jetAttenue ? d3 > d1 : d3 < d1))
+          .forEach((d3) => {
+            results[result] += 3;
+            debug.push(`${d1}-${d1}-${d3} : ${woundResultsLabels[result]}`);
+            debug.push(`${d1}-${d3}-${d1} : ${woundResultsLabels[result]}`);
+            debug.push(`${d3}-${d1}-${d1} : ${woundResultsLabels[result]}`);
+          });
+      }
 
-      // roll the second dice, only take cases where 2nd is strictly bigger than 1st (avoid useless repetion + exclude doubles)
+      // roll the second dice, only take cases where 2nd is strictly bigger/lesser than 1st (avoid useless repetion + exclude doubles)
       dice
-        .filter((d2) => d2 < d1)
+        .filter((d2) => (jetAttenue ? d2 > d1 : d2 < d1))
         .forEach((d2) => {
-          const result = readWoundTable(woundTable, d2, getIntensity(d1));
-          // each result is counted twice, ie 1-5 & 5-1
-          results[result] += 2;
-          debug.push(`${d1}-${d2} : ${woundResultsLabels[result]}`);
-          debug.push(`${d2}-${d1} : ${woundResultsLabels[result]}`);
+          const result = readWoundTable(
+            woundTable,
+            jetAttenue ? d1 : d2,
+            getIntensity(jetAttenue ? d2 : d1)
+          );
+          if (has3dice) {
+            dice
+              .filter((d3) => (jetAttenue ? d3 >= d2 : d3 <= d2))
+              .forEach((d3) => {
+                // three possible positions for 1st dice
+                results[result] += 3;
+                debug.push(`${d1}-${d2}-${d3} : ${woundResultsLabels[result]}`);
+                debug.push(`${d2}-${d1}-${d3} : ${woundResultsLabels[result]}`);
+                debug.push(`${d2}-${d3}-${d1} : ${woundResultsLabels[result]}`);
+                // three more possibilities if all three dice are different
+                if (d2 !== d3) {
+                  results[result] += 3;
+                  debug.push(
+                    `${d1}-${d3}-${d2} : ${woundResultsLabels[result]}`
+                  );
+                  debug.push(
+                    `${d3}-${d1}-${d2} : ${woundResultsLabels[result]}`
+                  );
+                  debug.push(
+                    `${d3}-${d2}-${d1} : ${woundResultsLabels[result]}`
+                  );
+                }
+              });
+          } else {
+            // two possible positions for both dice
+            results[result] += 2;
+            debug.push(`${d1}-${d2} : ${woundResultsLabels[result]}`);
+            debug.push(`${d2}-${d1} : ${woundResultsLabels[result]}`);
+          }
         });
     });
   });
@@ -71,7 +117,7 @@ export const computeResults = (
   if (toxique !== null && Number.isInteger(toxique)) {
     // only for results with an actual wound (not "rien" & "sonné")
     // each result is splitted in two, one with the failed toxique test part (result+=1), the other with the success toxic test part (result+=2)
-    // example: {result: resulValue} gives [result+1, resultValue*failedPart] & [result+2, resultValue*successedPart], 
+    // example: {result: resulValue} gives [result+1, resultValue*failedPart] & [result+2, resultValue*successedPart],
     const woundsAfterToxic = [2, 3, 4, 5].flatMap((i) => [
       [
         Math.min(1 + i + Number(vulnerable) - Number(ethere), 5),

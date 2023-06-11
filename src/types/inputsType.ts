@@ -3,6 +3,7 @@ import { diceType } from '@/constants/dice';
 // the form input types
 export type inputsType = {
   FOR: number;
+  jetAmplifie: boolean;
   armeSacree: boolean;
   tirImmobile: boolean;
   fleau: boolean;
@@ -12,6 +13,7 @@ export type inputsType = {
   toxique: null | 0 | diceType;
   //
   RES: number;
+  jetAttenue: boolean;
   armureSacree: boolean;
   durACuire: boolean;
   ethere: boolean;
