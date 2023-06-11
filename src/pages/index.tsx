@@ -2,9 +2,8 @@ import Grid from '@mui/material/Grid';
 import { initialInputs, inputsType } from '@/constants/inputs';
 import { outputsType } from '@/constants/outputs';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { computeResults } from '@/utils/computeResults';
-import { initialOutputs } from '@/constants/outputs';
 import OutputsTable from '@/components/OutputsTable';
 import Footer from '@/components/Footer';
 import {
@@ -22,30 +21,27 @@ import {
   getFormattedOutputsAsCumulativePercentage,
   getFormattedOutputsAsPercentage,
 } from '@/utils/getFormattedOutputs';
-import { Test } from '@/components/Test';
 
 export default function Home() {
   // inputs is the state of the form
   const [inputs, setInputs] = useState<inputsType>(initialInputs);
-
-  // outputs is the result of the calculation
-  const [outputs, setOutputs] = useState<outputsType>(initialOutputs);
+  //if true, it log detailled results
   const [isDebug, setIsDebug] = useState(false);
+  // the selected tab to display the results
   const [currentTab, setCurrentTab] = useState<number>(0);
 
-  // update the results on any change
-  useEffect(() => {
-    if (Number.isInteger(inputs.FOR) && Number.isInteger(inputs.RES)) {
-      setOutputs(computeResults(inputs, isDebug));
-    }
-  }, [inputs, isDebug]);
+  // all the results, recalculated each time inputs is changed
+  // better use useMemo over useState/useEffect to avoid 2 renders instead of one
+  const outputs = useMemo<outputsType>(
+    () => computeResults(inputs, isDebug),
+    [inputs, isDebug]
+  );
 
   return (
     <>
       <Head>
         <title>Create Next App</title>
       </Head>
-      <Test />
       <Grid
         container
         spacing={2}
