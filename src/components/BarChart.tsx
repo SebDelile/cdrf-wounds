@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { outputsType } from '@/types/outputsType';
-import { initialResults, woundResultsLabels } from '@/constants/woundResults';
+import { outputsType, initialOutputs } from '@/constants/outputs';
+import { woundResultsLabels } from '@/constants/woundResults';
 import { usePrevious } from '@/utils/usePrevious';
 
 type propTypes = {
@@ -24,7 +24,7 @@ const BAR_COLORS = [
 
 export default function BarChart({ data, hideFirstValue = false }: propTypes) {
   const svgNode = useRef(null);
-  const previousData = usePrevious(data, initialResults);
+  const previousData = usePrevious(data, initialOutputs);
 
   // build the chart
   useEffect(() => {

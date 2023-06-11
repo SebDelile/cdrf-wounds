@@ -1,12 +1,12 @@
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { inputsType } from '@/types/inputsType';
+import { inputsType } from '@/constants/inputs';
 import {
-  inputsTypeType,
+  InputElementsType,
   TYPE_CHECKBOX,
   TYPE_CHECKBOX_AND_VALUE,
   TYPE_NUMBER,
-} from '@/constants/inputsType';
+} from '@/constants/InputElements';
 import InputNumber from './InputNumber';
 import InputCheckbox from './InputCheckox';
 import InputCheckboxAndValue from './InputCheckboxAndValue';
@@ -16,7 +16,7 @@ type propTypes = {
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
 };
 
-type groupDetailsType<type = inputsTypeType> =
+type groupDetailsType<type = InputElementsType> =
   (type extends typeof TYPE_CHECKBOX
     ? {
         type: typeof TYPE_CHECKBOX;

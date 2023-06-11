@@ -2,7 +2,7 @@ import { dice, diceType } from '@/constants/dice';
 import { woundIntensity } from '@/constants/woundIntensity';
 import { woundResultsType } from '@/constants/woundResults';
 import { woundTable, WoundTableType } from '@/constants/woundTable';
-import { inputsType } from '@/types/inputsType';
+import { inputsType } from '@/constants/inputs';
 
 // for ease of calculation, some of the effect are applied directly to the woundTable before calculation
 export function setupWoundTable(inputs: inputsType): WoundTableType {
@@ -19,7 +19,7 @@ export function setupWoundTable(inputs: inputsType): WoundTableType {
   const modifiedWoundTable = Object.fromEntries(
     dice.map((i: diceType) => [i, { ...woundTable[i] }])
   ) as WoundTableType;
-// apply a callback to modify each cell of the columns
+  // apply a callback to modify each cell of the columns
   function mapOverColumns(
     columns: diceType[],
     callback: (arg0: woundResultsType) => woundResultsType
@@ -47,7 +47,8 @@ export function setupWoundTable(inputs: inputsType): WoundTableType {
     mapOverColumns([...dice], (originalResult) => {
       switch (originalResult) {
         case 1:
-          return (originalResult + Number(feroce && !ethere)) as woundResultsType;
+          return (originalResult +
+            Number(feroce && !ethere)) as woundResultsType;
         case 2:
         case 3:
           return (originalResult +

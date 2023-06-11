@@ -1,5 +1,5 @@
 import TextField from '@mui/material/TextField';
-import { inputsType } from '@/types/inputsType';
+import { inputsType } from '@/constants/inputs';
 
 type propTypes = {
   value?: number;

@@ -1,4 +1,4 @@
-import { outputsType } from '@/types/outputsType';
+import { outputsType } from '@/constants/outputs';
 // functions to format the outputs to be displayed in the table / chart
 
 export const getFormattedOutputs = (outputs: outputsType): outputsType =>
@@ -10,7 +10,7 @@ export const getFormattedOutputsAsPercentage = (
 ): outputsType => {
   const totalOutputs = outputs.reduce((a, b) => a + b, 0);
   return outputs.map((output) =>
-    parseFloat(((output / totalOutputs) * 100).toFixed(1))
+    totalOutputs ? parseFloat(((output / totalOutputs) * 100).toFixed(1)) : 0
   ) as outputsType;
 };
 
@@ -19,12 +19,14 @@ export const getFormattedOutputsAsCumulativePercentage = (
 ): outputsType => {
   const totalOutputs = outputs.reduce((a, b) => a + b, 0);
   return outputs.map((_, index) =>
-    parseFloat(
-      (
-        (outputs.reduce((a, b, j) => a + (index <= j ? b : 0), 0) /
-          totalOutputs) *
-        100
-      ).toFixed(1)
-    )
+    totalOutputs
+      ? parseFloat(
+          (
+            (outputs.reduce((a, b, j) => a + (index <= j ? b : 0), 0) /
+              totalOutputs) *
+            100
+          ).toFixed(1)
+        )
+      : 0
   ) as outputsType;
 };

@@ -1,7 +1,6 @@
-import { initialResults } from '@/constants/woundResults';
 import { dice, diceType } from '@/constants/dice';
-import { inputsType } from '@/types/inputsType';
-import { outputsType } from '@/types/outputsType';
+import { inputsType } from '@/constants/inputs';
+import { outputsType, initialOutputs } from '@/constants/outputs';
 import { woundIntensityType } from '@/constants/woundIntensity';
 import { woundResultsLabels } from '@/constants/woundResults';
 import { readWoundTable } from './readWoundTable';
@@ -13,7 +12,7 @@ export const computeResults = (
 ): outputsType => {
   //initialize
   const debug: string[] = [];
-  const results = [...initialResults] as outputsType;
+  const results = [...initialOutputs] as outputsType;
   const woundTable = setupWoundTable(inputs);
   const {
     FOR,

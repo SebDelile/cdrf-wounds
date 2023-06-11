@@ -1,17 +1,17 @@
 import Grid from '@mui/material/Grid';
-import { inputsType } from '@/types/inputsType';
-import { outputsType } from '@/types/outputsType';
+import { initialInputs, inputsType } from '@/constants/inputs';
+import { outputsType } from '@/constants/outputs';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { computeResults } from '@/utils/computeResults';
-import { initialResults } from '@/constants/woundResults';
+import { initialOutputs } from '@/constants/outputs';
 import OutputsTable from '@/components/OutputsTable';
 import Footer from '@/components/Footer';
 import {
   TYPE_CHECKBOX,
   TYPE_CHECKBOX_AND_VALUE,
   TYPE_NUMBER,
-} from '@/constants/inputsType';
+} from '@/constants/InputElements';
 import InputsGroup from '@/components/InputsGroup';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -22,33 +22,14 @@ import {
   getFormattedOutputsAsCumulativePercentage,
   getFormattedOutputsAsPercentage,
 } from '@/utils/getFormattedOutputs';
+import { Test } from '@/components/Test';
 
 export default function Home() {
   // inputs is the state of the form
-  const [inputs, setInputs] = useState<inputsType>({
-    FOR: 0,
-    jetAmplifie: false,
-    armeSacree: false,
-    tirImmobile: false,
-    fleau: false,
-    feroce: false,
-    epeeHache: false,
-    vapeurFOR: false,
-    toxique: null,
-    //
-    RES: 0,
-    jetAttenue: false,
-    armureSacree: false,
-    durACuire: false,
-    ethere: false,
-    vulnerable: false,
-    immuJambes: false,
-    immuTete: false,
-    immuSonne: false,
-  });
+  const [inputs, setInputs] = useState<inputsType>(initialInputs);
 
   // outputs is the result of the calculation
-  const [outputs, setOutputs] = useState<outputsType>(initialResults);
+  const [outputs, setOutputs] = useState<outputsType>(initialOutputs);
   const [isDebug, setIsDebug] = useState(false);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
@@ -64,6 +45,7 @@ export default function Home() {
       <Head>
         <title>Create Next App</title>
       </Head>
+      <Test />
       <Grid
         container
         spacing={2}

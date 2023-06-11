@@ -1,6 +1,6 @@
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { inputsType } from '@/types/inputsType';
+import { inputsType } from '@/constants/inputs';
 
 type propTypes = {
   value: boolean;

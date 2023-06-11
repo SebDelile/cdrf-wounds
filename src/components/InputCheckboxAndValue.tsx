@@ -1,7 +1,7 @@
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
-import { inputsType } from '@/types/inputsType';
+import { inputsType } from '@/constants/inputs';
 import { inherits } from 'util';
 
 type propTypes = {

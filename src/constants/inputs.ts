@@ -22,3 +22,25 @@ export type inputsType = {
   immuTete: boolean;
   immuSonne: boolean;
 };
+
+export const initialInputs: inputsType = {
+  FOR: 0,
+  jetAmplifie: false,
+  armeSacree: false,
+  tirImmobile: false,
+  fleau: false,
+  feroce: false,
+  epeeHache: false,
+  vapeurFOR: false,
+  toxique: null,
+  //
+  RES: 0,
+  jetAttenue: false,
+  armureSacree: false,
+  durACuire: false,
+  ethere: false,
+  vulnerable: false,
+  immuJambes: false,
+  immuTete: false,
+  immuSonne: false,
+};
