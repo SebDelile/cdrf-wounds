@@ -1,231 +1,74 @@
-import Grid from '@mui/material/Grid';
-import { initialInputs, inputsType } from '@/constants/inputs';
-import { outputsType } from '@/constants/outputs';
+import { useState } from 'react';
 import Head from 'next/head';
-import { useMemo, useState } from 'react';
-import { computeResults } from '@/utils/computeResults';
-import OutputsTable from '@/components/OutputsTable';
-import Footer from '@/components/Footer';
-import {
-  TYPE_CHECKBOX,
-  TYPE_CHECKBOX_AND_VALUE,
-  TYPE_NUMBER,
-} from '@/constants/InputElements';
-import InputsGroup from '@/components/InputsGroup';
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { Paper } from '@mui/material';
-import BarChart from '@/components/BarChart';
-import {
-  getFormattedOutputsAsCumulativePercentage,
-  getFormattedOutputsAsPercentage,
-} from '@/utils/getFormattedOutputs';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import WoundCalculator from '@/components/WoundCalculator';
 
 export default function Home() {
-  // inputs is the state of the form
-  const [inputs, setInputs] = useState<inputsType>(initialInputs);
-  //if true, it log detailled results
-  const [isDebug, setIsDebug] = useState(false);
-  // the selected tab to display the results
-  const [currentTab, setCurrentTab] = useState<number>(0);
+  const [calculators, setCalculators] = useState<number[]>([0]);
 
-  // all the results, recalculated each time inputs is changed
-  // better use useMemo over useState/useEffect to avoid 2 renders instead of one
-  const outputs = useMemo<outputsType>(
-    () => computeResults(inputs, isDebug),
-    [inputs, isDebug]
-  );
+  const addCalculator = () => {
+    const biggestCurrentId = calculators.reduce(
+      (max, current) => (current > max ? current : max),
+      0
+    );
+    setCalculators((prev) => [...prev, biggestCurrentId + 1]);
+  };
+
+  const removeCalculator = (removedId: number) => {
+    setCalculators((prev) => prev.filter((id) => id !== removedId));
+  };
 
   return (
     <>
       <Head>
-        <title>Create Next App</title>
+        <title>CDRF Calcul de blessure</title>
       </Head>
       <Grid
         container
-        spacing={2}
+        spacing={4}
         component={'main'}
         sx={{
           padding: '2rem',
         }}
       >
-        <Grid container item xs={12} md={6} spacing={2}>
-          <Grid item xs={6}>
-            <InputsGroup
-              groupDetails={[
-                {
-                  type: TYPE_NUMBER,
-                  value: inputs.FOR,
-                  name: 'FOR',
-                  label: 'FOR',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.jetAmplifie,
-                  name: 'jetAmplifie',
-                  label: 'Jet Amplifié',
-                  disabled: inputs.jetAttenue,
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.armeSacree,
-                  name: 'armeSacree',
-                  label: 'Arme Sacrée',
-                  disabled: inputs.armureSacree,
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.tirImmobile,
-                  name: 'tirImmobile',
-                  label: 'Tir immobile',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.fleau,
-                  name: 'fleau',
-                  label: 'Fléau',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.feroce,
-                  name: 'feroce',
-                  label: 'Féroce',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.epeeHache,
-                  name: 'epeeHache',
-                  label: 'Epée-hache',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.vapeurFOR,
-                  name: 'vapeurFOR',
-                  label: 'Vapeur/FOR',
-                },
-                {
-                  type: TYPE_CHECKBOX_AND_VALUE,
-                  value: inputs.toxique,
-                  name: 'toxique',
-                  label: 'Toxique/X',
-                  range: [0, 6],
-                },
-              ]}
-              setInputs={setInputs}
+        {calculators.map((id) => (
+          <Grid
+            item
+            key={id}
+            xs={12}
+            component={'section'}
+            sx={{ position: 'relative' }}
+          >
+            <WoundCalculator
+              id={id}
+              removeCalculator={
+                calculators.length > 1 ? removeCalculator : undefined
+              }
+            />
+            <hr
+              style={{
+                position: 'absolute',
+                left: '20%',
+                bottom: '-26px',
+                width: '60%',
+                border: 'solid #ccc 2px',
+              }}
             />
           </Grid>
-          <Grid item xs={6}>
-            <InputsGroup
-              groupDetails={[
-                {
-                  type: TYPE_NUMBER,
-                  value: inputs.RES,
-                  name: 'RES',
-                  label: 'RES',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.jetAttenue,
-                  name: 'jetAttenue',
-                  label: 'Jet Atténué',
-                  disabled: inputs.jetAmplifie,
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.armureSacree,
-                  name: 'armureSacree',
-                  label: 'Armure Sacrée',
-                  impliedChanges: [
-                    [
-                      'armeSacree',
-                      (newState, prevFieldState) =>
-                        newState ? false : prevFieldState,
-                    ],
-                  ],
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.durACuire,
-                  name: 'durACuire',
-                  label: 'Dur à cuire',
-                },
-
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.ethere,
-                  name: 'ethere',
-                  label: 'Ethéré',
-                  impliedChanges: [['immuSonne', (newState) => newState]],
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.vulnerable,
-                  name: 'vulnerable',
-                  label: 'Vulnérable',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.immuJambes,
-                  name: 'immuJambes',
-                  label: 'Immunité/jambes',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.immuTete,
-                  name: 'immuTete',
-                  label: 'Immunité/tête',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.immuSonne,
-                  name: 'immuSonne',
-                  label: 'Immunité/Sonné',
-                  disabled: inputs.ethere,
-                },
-              ]}
-              setInputs={setInputs}
-            />
-          </Grid>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs
-                value={currentTab}
-                onChange={(_, newValue) => setCurrentTab(newValue)}
-              >
-                <Tab label="Graph proportion" />
-                <Tab label="Graph proportion cumulée" />
-                <Tab label="Tableau" />
-              </Tabs>
-            </Box>
-            {[
-              <Box
-                sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
-                key={0}
-              >
-                <BarChart data={getFormattedOutputsAsPercentage(outputs)} />
-              </Box>,
-              <Box
-                sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
-                key={0}
-              >
-                <BarChart
-                  data={getFormattedOutputsAsCumulativePercentage(outputs)}
-                  hideFirstValue={true}
-                />
-              </Box>,
-              <OutputsTable key={2} outputs={outputs} />,
-            ].map((child, index) => (
-              <div key={index} role="tabpanel" hidden={currentTab !== index}>
-                {currentTab === index ? child : null}
-              </div>
-            ))}
-          </Paper>
+        ))}
+        <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
+            onClick={() => addCalculator()}
+            sx={{ backgroundColor: 'white' }}
+          >
+            Ajouter un calculateur
+          </Button>
         </Grid>
       </Grid>
-      <Footer isDebug={isDebug} setIsDebug={setIsDebug} />
     </>
   );
 }
