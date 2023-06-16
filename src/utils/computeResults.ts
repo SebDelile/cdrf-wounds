@@ -15,8 +15,8 @@ export const computeResults = (
   const results = [...initialOutputs] as outputsType;
   const woundTable = setupWoundTable(inputs);
   const {
-    FOR,
-    RES,
+    FORmoinsRES,
+    double6Tue,
     jetAmplifie,
     jetAttenue,
     armeSacree,
@@ -37,7 +37,7 @@ export const computeResults = (
     // the result FOR-RES+1d6 (+Vapeur) with row modifiers
     // /2 is because the woundIntensity is from -1 to 9 (divided by 2 as compared to original wound table)
     const getIntensity = (dice: diceType) => {
-      const rawIntensity = Math.floor((FOR + dice + vapeurBonus - RES) / 2);
+      const rawIntensity = Math.floor((FORmoinsRES + dice + vapeurBonus) / 2);
       const intensityWithLineShift =
         rawIntensity + Number(tirImmobile) + Number(fleau) - Number(durACuire);
       return Math.min(
@@ -51,7 +51,7 @@ export const computeResults = (
       // handle doubles
       const result = armureSacree
         ? 0
-        : armeSacree
+        : armeSacree || (d1 === 6 && double6Tue)
         ? 5
         : readWoundTable(woundTable, d1, getIntensity(d1));
       // handle dice are all same (triple for 3 dice roll, double, for 2 dice roll)

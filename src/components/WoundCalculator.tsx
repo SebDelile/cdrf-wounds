@@ -53,16 +53,30 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
       alignItems="stretch"
     >
       <Grid item xs={12} md={6} spacing={0}>
-        <Grid container columnSpacing={2}>
-          <Grid item xs={6} spacing={0}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} spacing={0}>
             <InputsGroup
               groupDetails={[
                 {
                   type: TYPE_NUMBER,
-                  value: inputs.FOR,
-                  name: 'FOR',
-                  label: 'FOR',
+                  value: inputs.FORmoinsRES,
+                  name: 'FORmoinsRES',
+                  label: 'FOR moins RES',
                 },
+                {
+                  type: TYPE_CHECKBOX,
+                  value: inputs.double6Tue,
+                  name: 'double6Tue',
+                  label: '6-6 = Tué net',
+                },
+              ]}
+              setInputs={setInputs}
+              row={true}
+            />
+          </Grid>
+          <Grid item xs={6} spacing={0}>
+            <InputsGroup
+              groupDetails={[
                 {
                   type: TYPE_CHECKBOX,
                   value: inputs.jetAmplifie,
@@ -121,12 +135,6 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
           <Grid item xs={6}>
             <InputsGroup
               groupDetails={[
-                {
-                  type: TYPE_NUMBER,
-                  value: inputs.RES,
-                  name: 'RES',
-                  label: 'RES',
-                },
                 {
                   type: TYPE_CHECKBOX,
                   value: inputs.jetAttenue,

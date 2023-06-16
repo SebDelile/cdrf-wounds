@@ -14,6 +14,7 @@ import InputCheckboxAndValue from './InputCheckboxAndValue';
 type propTypes = {
   groupDetails: groupDetailsType[];
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
+  row?: boolean;
 };
 
 type groupDetailsType<type = InputElementsType> =
@@ -44,13 +45,17 @@ type groupDetailsType<type = InputElementsType> =
     range?: [number, number];
   };
 
-export default function InputsGroup({ setInputs, groupDetails }: propTypes) {
+export default function InputsGroup({
+  setInputs,
+  groupDetails,
+  row,
+}: propTypes) {
   return (
     <Grid
       container
-      direction="column"
       component={Paper}
-      sx={{ padding: '1rem' }}
+      sx={{ padding: '1rem', columnGap: '1rem' }}
+      {...(row ? { alignItems: 'center' } : { direction: 'column' })}
     >
       {groupDetails.map(
         ({ type, name, value, label, disabled, impliedChanges, range }) => (

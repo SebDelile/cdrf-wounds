@@ -2,7 +2,9 @@ import { diceType } from '@/constants/dice';
 
 // the form input types
 export type inputsType = {
-  FOR: number;
+  FORmoinsRES: number;
+  double6Tue: boolean;
+  //
   jetAmplifie: boolean;
   armeSacree: boolean;
   tirImmobile: boolean;
@@ -12,7 +14,6 @@ export type inputsType = {
   vapeurFOR: boolean;
   toxique: null | 0 | diceType;
   //
-  RES: number;
   jetAttenue: boolean;
   armureSacree: boolean;
   durACuire: boolean;
@@ -24,7 +25,9 @@ export type inputsType = {
 };
 
 export const initialInputs: inputsType = {
-  FOR: 0,
+  FORmoinsRES: 0,
+  double6Tue: false,
+  //
   jetAmplifie: false,
   armeSacree: false,
   tirImmobile: false,
@@ -34,7 +37,6 @@ export const initialInputs: inputsType = {
   vapeurFOR: false,
   toxique: null,
   //
-  RES: 0,
   jetAttenue: false,
   armureSacree: false,
   durACuire: false,
