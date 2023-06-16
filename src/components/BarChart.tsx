@@ -3,14 +3,15 @@ import * as d3 from 'd3';
 import { outputsType, initialOutputs } from '@/constants/outputs';
 import { woundResultsLabels } from '@/constants/woundResults';
 import { usePrevious } from '@/utils/usePrevious';
+import { Box } from '@mui/material';
+import useResize from '@/utils/useResize';
 
 type propTypes = {
   data: outputsType;
   hideFirstValue?: boolean;
 };
 
-const CHART_HEIGHT = 300;
-const CHART_WIDTH = 450;
+const CHART_MARGIN = 25;
 
 const BAR_COLORS = [
   '#F5C5C5',
@@ -22,12 +23,19 @@ const BAR_COLORS = [
 ];
 
 export default function BarChart({ data, hideFirstValue = false }: propTypes) {
+  const container = useRef(null);
   const svgNode = useRef(null);
   const previousData = usePrevious(data, initialOutputs);
 
+  const [containerWidth, containerHeight] = useResize(container);
+
   // build the chart
   useEffect(() => {
-    if (svgNode.current) {
+    if (
+      svgNode.current &&
+      containerWidth > 2 * CHART_MARGIN &&
+      containerHeight > 2 * CHART_MARGIN
+    ) {
       // format the data
       const chartData = data.map((value, i) => ({
         label: `${woundResultsLabels[i]}${
@@ -48,12 +56,12 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
       // make the X axis
       const x = d3
         .scaleBand()
-        .range([0, CHART_WIDTH])
+        .range([CHART_MARGIN, containerWidth - CHART_MARGIN])
         .domain(chartData.map(({ label }) => label))
         .padding(0.2);
       svg
         .append('g')
-        .attr('transform', `translate(0,${CHART_HEIGHT})`)
+        .attr('transform', `translate(0,${containerHeight - CHART_MARGIN})`)
         .call(d3.axisBottom(x));
 
       // make the Y axis
@@ -65,7 +73,7 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
       const y = d3
         .scaleLinear()
         .domain([0, yAxisUpperLimit])
-        .range([CHART_HEIGHT, 0]);
+        .range([containerHeight - CHART_MARGIN, CHART_MARGIN]);
       // prevYAxis is used for the animation
       const previousYAxisUpperLimit =
         Math.ceil(
@@ -76,13 +84,24 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
       const prevY = d3
         .scaleLinear()
         .domain([0, previousYAxisUpperLimit])
-        .range([CHART_HEIGHT, 0]);
+        .range([containerHeight - CHART_MARGIN, CHART_MARGIN]);
       svg
         .append('g')
         .attr('id', 'yaxis')
-        .call(d3.axisLeft(prevY).tickSize(-CHART_WIDTH))
+        .attr('transform', `translate(${CHART_MARGIN},0)`)
+        .call(
+          d3
+            .axisLeft(prevY)
+            .tickFormat(() => '')
+            .tickSize(-(containerWidth - 2 * CHART_MARGIN))
+        )
         .transition(chartTransition)
-        .call(d3.axisLeft(y).tickSize(-CHART_WIDTH))
+        .call(
+          d3
+            .axisLeft(y)
+            .tickFormat(() => '')
+            .tickSize(-(containerWidth - 2 * CHART_MARGIN))
+        )
         .selectAll('.tick line')
         .attr('stroke', '#CCC')
         .attr('stroke-width', 1)
@@ -93,7 +112,7 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
       svg
         .append('g')
         .call(d3.axisRight(y).tickValues([]).tickSize(0))
-        .attr('transform', `translate(${CHART_WIDTH},0)`);
+        .attr('transform', `translate(${containerWidth - CHART_MARGIN},0)`);
 
       // pop the rect in the charts
       svg
@@ -108,10 +127,10 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
         .attr('x', (d) => x(d.label)!)
         .attr('width', x.bandwidth())
         .attr('y', (d) => y(d.prevValue))
-        .attr('height', (d) => CHART_HEIGHT - y(d.prevValue))
+        .attr('height', (d) => containerHeight - CHART_MARGIN - y(d.prevValue))
         .transition(chartTransition)
         .attr('y', (d) => y(d.value))
-        .attr('height', (d) => CHART_HEIGHT - y(d.value));
+        .attr('height', (d) => containerHeight - CHART_MARGIN - y(d.value));
 
       // add labels to the rect
       svg
@@ -134,9 +153,19 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
         svg.selectAll('*').remove();
       };
     }
-  }, [data, previousData, hideFirstValue]);
+  }, [data, previousData, hideFirstValue, containerWidth, containerHeight]);
 
   return (
-    <svg ref={svgNode} width={CHART_WIDTH + 20} height={CHART_HEIGHT + 20} />
+    <Box
+      ref={container}
+      sx={{
+        flexGrow: 1,
+        flexShrink: 1,
+        overflow: 'hidden',
+        height: { xs: '300px', md: 'unset' },
+      }}
+    >
+      <svg ref={svgNode} width={containerWidth} height={containerHeight} />
+    </Box>
   );
 }

@@ -52,9 +52,9 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
       }}
       alignItems="stretch"
     >
-      <Grid item xs={12} md={6} spacing={0}>
+      <Grid item xs={12} md={6}>
         <Grid container spacing={2}>
-          <Grid item xs={12} spacing={0}>
+          <Grid item xs={12}>
             <InputsGroup
               groupDetails={[
                 {
@@ -74,7 +74,7 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
               row={true}
             />
           </Grid>
-          <Grid item xs={6} spacing={0}>
+          <Grid item xs={6}>
             <InputsGroup
               groupDetails={[
                 {
@@ -201,36 +201,46 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
         </Grid>
       </Grid>
       <Grid item xs={12} md={6}>
-        <Paper sx={{ height: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Paper
+          sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+        >
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', flexGrow: 0 }}>
             <Tabs
               value={currentTab}
               onChange={(_, newValue) => setCurrentTab(newValue)}
             >
-              <Tab label="Graph proportion" />
-              <Tab label="Graph proportion cumulée" />
+              <Tab label="Graph" />
+              <Tab label="Graph cumul" />
               <Tab label="Tableau" />
             </Tabs>
           </Box>
           {[
-            <Box
-              sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
+            <BarChart
               key={0}
-            >
-              <BarChart data={getFormattedOutputsAsPercentage(outputs)} />
-            </Box>,
-            <Box
-              sx={{ p: 3, display: 'flex', justifyContent: 'center' }}
-              key={0}
-            >
-              <BarChart
-                data={getFormattedOutputsAsCumulativePercentage(outputs)}
-                hideFirstValue={true}
-              />
-            </Box>,
+              data={getFormattedOutputsAsPercentage(outputs)}
+            />,
+
+            <BarChart
+              key={1}
+              data={getFormattedOutputsAsCumulativePercentage(outputs)}
+              hideFirstValue={true}
+            />,
             <OutputsTable key={2} outputs={outputs} />,
           ].map((child, index) => (
-            <div key={index} role="tabpanel" hidden={currentTab !== index}>
+            <div
+              key={index}
+              role="tabpanel"
+              {...(currentTab !== index
+                ? { hidden: true }
+                : {
+                    style: {
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'stretch',
+                      flexGrow: 1,
+                    },
+                  })}
+            >
               {currentTab === index ? child : null}
             </div>
           ))}
