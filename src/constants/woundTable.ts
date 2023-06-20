@@ -2,6 +2,8 @@ import { diceType } from './dice';
 import { woundIntensityType } from './woundIntensity';
 import { woundResultsType } from './woundResults';
 
+export const localisations = ['jambes', 'bras', 'abdomen', 'tronc', 'tête'];
+
 // the transcription of the wound table : /public/carte-c3_tableau-blessures.jpg
 // 1st level is the column (1="jambes", 2="bras", ...)
 // 2nd level is the row (-1 => <0, 0 => 0-1, ...) see ./woundIntensity.ts

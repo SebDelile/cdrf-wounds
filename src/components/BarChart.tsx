@@ -8,6 +8,7 @@ import useResize from '@/utils/useResize';
 
 type propTypes = {
   data: outputsType;
+  containerRef: React.RefObject<Element>;
   hideFirstValue?: boolean;
 };
 
@@ -22,12 +23,14 @@ const BAR_COLORS = [
   '#2AA0606',
 ];
 
-export default function BarChart({ data, hideFirstValue = false }: propTypes) {
-  const container = useRef(null);
+export default function BarChart({
+  data,
+  containerRef,
+  hideFirstValue = false,
+}: propTypes) {
   const svgNode = useRef(null);
   const previousData = usePrevious(data, initialOutputs);
-
-  const [containerWidth, containerHeight] = useResize(container);
+  const [containerWidth, containerHeight] = useResize(containerRef);
 
   // build the chart
   useEffect(() => {
@@ -155,17 +158,5 @@ export default function BarChart({ data, hideFirstValue = false }: propTypes) {
     }
   }, [data, previousData, hideFirstValue, containerWidth, containerHeight]);
 
-  return (
-    <Box
-      ref={container}
-      sx={{
-        flexGrow: 1,
-        flexShrink: 1,
-        overflow: 'hidden',
-        height: { xs: '300px', md: 'unset' },
-      }}
-    >
-      <svg ref={svgNode} width={containerWidth} height={containerHeight} />
-    </Box>
-  );
+  return <svg ref={svgNode} width={containerWidth} height={containerHeight} />;
 }

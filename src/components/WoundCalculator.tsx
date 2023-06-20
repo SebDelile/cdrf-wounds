@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { initialInputs, inputsType } from '@/constants/inputs';
-import { outputsType } from '@/constants/outputs';
+import { outputsType, detailledOutputsType } from '@/constants/outputs';
 import {
   TYPE_CHECKBOX,
   TYPE_CHECKBOX_AND_VALUE,
@@ -22,6 +22,7 @@ import {
   getFormattedOutputsAsPercentage,
 } from '@/utils/getFormattedOutputs';
 import { computeResults } from '@/utils/computeResults';
+import OutputsList from './OutputsList';
 
 type propTypes = {
   id: number;
@@ -38,10 +39,11 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
   // all the results, recalculated each time inputs is changed
   // better use useMemo over useState/useEffect to avoid 2 renders instead of one
   // second parameter is isDebug flag (to log the detailled results)
-  const outputs = useMemo<outputsType>(
-    () => computeResults(inputs, false),
-    [inputs]
-  );
+  const [outputs, detailledOutputs] = useMemo<
+    [outputsType, detailledOutputsType]
+  >(() => computeResults(inputs), [inputs]);
+
+  const ResultContainerRef = useRef(null);
 
   return (
     <Grid
@@ -212,38 +214,45 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
               <Tab label="Graph" />
               <Tab label="Graph cumul" />
               <Tab label="Tableau" />
+              <Tab label="Liste" />
             </Tabs>
           </Box>
-          {[
-            <BarChart
-              key={0}
-              data={getFormattedOutputsAsPercentage(outputs)}
-            />,
+          <Box
+            role="tabpanel"
+            ref={ResultContainerRef}
+            sx={{
+              flexGrow: 1,
+              flexShrink: 1,
+              overflow: 'hidden',
+              height: { xs: '375px', md: 'unset' },
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'stretch',
+            }}
+          >
+            {[
+              <BarChart
+                key={0}
+                data={getFormattedOutputsAsPercentage(outputs)}
+                containerRef={ResultContainerRef}
+              />,
 
-            <BarChart
-              key={1}
-              data={getFormattedOutputsAsCumulativePercentage(outputs)}
-              hideFirstValue={true}
-            />,
-            <OutputsTable key={2} outputs={outputs} />,
-          ].map((child, index) => (
-            <div
-              key={index}
-              role="tabpanel"
-              {...(currentTab !== index
-                ? { hidden: true }
-                : {
-                    style: {
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'stretch',
-                      flexGrow: 1,
-                    },
-                  })}
-            >
-              {currentTab === index ? child : null}
-            </div>
-          ))}
+              <BarChart
+                key={1}
+                data={getFormattedOutputsAsCumulativePercentage(outputs)}
+                containerRef={ResultContainerRef}
+                hideFirstValue={true}
+              />,
+              <OutputsTable key={2} outputs={outputs} />,
+              <OutputsList
+                key={3}
+                detailledOutputs={detailledOutputs}
+                containerRef={ResultContainerRef}
+                isToxic={inputs.toxique !== null}
+              />,
+            ].map((child, index) => (currentTab === index ? child : null))}
+          </Box>
         </Paper>
       </Grid>
       {typeof removeCalculator === 'function' && (

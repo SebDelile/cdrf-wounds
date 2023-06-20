@@ -4,6 +4,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+
 import { outputsType } from '@/constants/outputs';
 import { woundResultsLabels } from '@/constants/woundResults';
 import {
