@@ -28,6 +28,8 @@ export const computeResults = (
     ethere,
     vulnerable,
     toxique,
+    immuJambes,
+    immuTete,
   } = inputs;
 
   const has3dice = jetAmplifie || jetAttenue;
@@ -49,11 +51,12 @@ export const computeResults = (
     // loop on the first dice
     dice.forEach((d1) => {
       // handle doubles
-      const result = armureSacree
-        ? 0
-        : armeSacree || (d1 === 6 && double6Tue)
-        ? 5
-        : readWoundTable(woundTable, d1, getIntensity(d1));
+      const result =
+        armureSacree || (d1 === 1 && immuJambes) || (d1 >= 5 && immuTete)
+          ? 0
+          : armeSacree || (d1 === 6 && double6Tue)
+          ? 5
+          : readWoundTable(woundTable, d1, getIntensity(d1));
       // handle dice are all same (triple for 3 dice roll, double, for 2 dice roll)
       results[result]++;
       debug.push(
