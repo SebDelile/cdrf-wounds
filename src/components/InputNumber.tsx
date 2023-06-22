@@ -1,10 +1,12 @@
 import TextField from '@mui/material/TextField';
+import Tooltip from './InputTooltip';
 import { inputsType } from '@/constants/inputs';
 import { inputDisabledType } from '@/constants/inputsInfo';
 
 type propTypes = {
   name: keyof inputsType;
   label: string;
+  description: string;
   disabled?: inputDisabledType;
   range?: [number, number];
   inputs: inputsType;
@@ -14,6 +16,7 @@ type propTypes = {
 export default function InputNumber({
   name,
   label,
+  description,
   disabled,
   range,
   inputs,
@@ -22,34 +25,38 @@ export default function InputNumber({
   const value = inputs[name] as number | undefined;
   const isError = !Number.isInteger(value);
   return (
-    <TextField
-      id={`input-${name}`}
-      label={label}
-      type="number"
-      value={isError ? '' : value}
-      onChange={(event) => {
-        setInputs((state) => ({
-          ...state,
-          [name]: parseInt(event.target.value),
-        }));
-      }}
-      disabled={disabled?.some(([field, callback]) => callback(inputs[field]))}
-      error={isError}
-      helperText={isError ? 'Champ obligatoire' : null}
-      inputProps={{
-        ...(range && {
-          min: range[0],
-          max: range[1],
-        }),
-      }}
-      sx={{
-        width: '100%',
-        maxWidth: '150px',
-        '& .MuiFormHelperText-root': {
-          position: 'absolute',
-          bottom: 0,
-        },
-      }}
-    />
+    <Tooltip title={description}>
+      <TextField
+        id={`input-${name}`}
+        label={label}
+        type="number"
+        value={isError ? '' : value}
+        onChange={(event) => {
+          setInputs((state) => ({
+            ...state,
+            [name]: parseInt(event.target.value),
+          }));
+        }}
+        disabled={disabled?.some(([field, callback]) =>
+          callback(inputs[field])
+        )}
+        error={isError}
+        helperText={isError ? 'Champ obligatoire' : null}
+        inputProps={{
+          ...(range && {
+            min: range[0],
+            max: range[1],
+          }),
+        }}
+        sx={{
+          width: '100%',
+          maxWidth: '150px',
+          '& .MuiFormHelperText-root': {
+            position: 'absolute',
+            bottom: 0,
+          },
+        }}
+      />
+    </Tooltip>
   );
 }
