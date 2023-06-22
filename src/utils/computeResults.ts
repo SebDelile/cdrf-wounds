@@ -35,6 +35,11 @@ export const computeResults = (
     immuTete,
   } = inputs;
 
+  // early return if the results can't be calculated
+  if (!Number.isInteger(FORmoinsRES)) {
+    return [outputResults, detailledOutputs];
+  }
+
   const has3dice = jetAmplifie || jetAttenue;
 
   // if vapeurFOR, we wrap with an additionnal loop with FOR+1 to FOR+6 around the logic
