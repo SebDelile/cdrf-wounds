@@ -3,24 +3,26 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import { inputsType } from '@/constants/inputs';
 import { inherits } from 'util';
+import { inputDisabledType } from '@/constants/inputsInfo';
 
 type propTypes = {
-  value?: null | number;
   name: keyof inputsType;
   label: string;
-  disabled?: boolean;
+  disabled?: inputDisabledType;
   range?: [number, number];
+  inputs: inputsType;
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
 };
 
 export default function InputCheckboxWithValue({
-  value,
   name,
   label,
   disabled,
   range,
+  inputs,
   setInputs,
 }: propTypes) {
+  const value = inputs[name] as null | number;
   return (
     <>
       <FormControlLabel
@@ -39,7 +41,9 @@ export default function InputCheckboxWithValue({
           />
         }
         label={label}
-        disabled={disabled}
+        disabled={disabled?.some(([field, callback]) =>
+          callback(inputs[field])
+        )}
         sx={{
           color:
             // error display, as props error seems to be absent even if the doc say yes :(
@@ -57,7 +61,9 @@ export default function InputCheckboxWithValue({
               [name]: parseInt(event.target.value),
             }));
           }}
-          disabled={disabled}
+          disabled={disabled?.some(([field, callback]) =>
+            callback(inputs[field])
+          )}
           error={!Number.isInteger(value)}
           inputProps={{
             ...(range && {

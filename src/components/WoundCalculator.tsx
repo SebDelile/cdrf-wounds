@@ -13,7 +13,7 @@ import {
   TYPE_CHECKBOX,
   TYPE_CHECKBOX_AND_VALUE,
   TYPE_NUMBER,
-} from '@/constants/InputElements';
+} from '@/constants/inputElements';
 import OutputsTable from '@/components/OutputsTable';
 import InputsGroup from '@/components/InputsGroup';
 import BarChart from '@/components/BarChart';
@@ -58,145 +58,41 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <InputsGroup
-              groupDetails={[
-                {
-                  type: TYPE_NUMBER,
-                  value: inputs.FORmoinsRES,
-                  name: 'FORmoinsRES',
-                  label: 'FOR moins RES',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.double6Tue,
-                  name: 'double6Tue',
-                  label: '6-6 = Tué net',
-                },
-              ]}
+              fields={['FORmoinsRES', 'double6Tue']}
+              inputs={inputs}
               setInputs={setInputs}
               row={true}
             />
           </Grid>
           <Grid item xs={6}>
             <InputsGroup
-              groupDetails={[
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.jetAmplifie,
-                  name: 'jetAmplifie',
-                  label: 'Jet Amplifié',
-                  disabled: inputs.jetAttenue,
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.armeSacree,
-                  name: 'armeSacree',
-                  label: 'Arme Sacrée',
-                  disabled: inputs.armureSacree,
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.tirImmobile,
-                  name: 'tirImmobile',
-                  label: 'Tir immobile',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.fleau,
-                  name: 'fleau',
-                  label: 'Fléau',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.feroce,
-                  name: 'feroce',
-                  label: 'Féroce',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.epeeHache,
-                  name: 'epeeHache',
-                  label: 'Epée-hache',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.vapeurFOR,
-                  name: 'vapeurFOR',
-                  label: 'Vapeur/FOR',
-                },
-                {
-                  type: TYPE_CHECKBOX_AND_VALUE,
-                  value: inputs.toxique,
-                  name: 'toxique',
-                  label: 'Toxique/X',
-                  range: [0, 6],
-                },
+              fields={[
+                'jetAmplifie',
+                'armeSacree',
+                'tirImmobile',
+                'fleau',
+                'feroce',
+                'epeeHache',
+                'vapeurFOR',
+                'toxique',
               ]}
+              inputs={inputs}
               setInputs={setInputs}
             />
           </Grid>
           <Grid item xs={6}>
             <InputsGroup
-              groupDetails={[
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.jetAttenue,
-                  name: 'jetAttenue',
-                  label: 'Jet Atténué',
-                  disabled: inputs.jetAmplifie,
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.armureSacree,
-                  name: 'armureSacree',
-                  label: 'Armure Sacrée',
-                  impliedChanges: [
-                    [
-                      'armeSacree',
-                      (newState, prevFieldState) =>
-                        newState ? false : prevFieldState,
-                    ],
-                  ],
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.durACuire,
-                  name: 'durACuire',
-                  label: 'Dur à cuire',
-                },
-
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.ethere,
-                  name: 'ethere',
-                  label: 'Ethéré',
-                  impliedChanges: [['immuSonne', (newState) => newState]],
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.vulnerable,
-                  name: 'vulnerable',
-                  label: 'Vulnérable',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.immuJambes,
-                  name: 'immuJambes',
-                  label: 'Immunité/jambes',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.immuTete,
-                  name: 'immuTete',
-                  label: 'Immunité/tête',
-                },
-                {
-                  type: TYPE_CHECKBOX,
-                  value: inputs.immuSonne,
-                  name: 'immuSonne',
-                  label: 'Immunité/Sonné',
-                  disabled: inputs.ethere,
-                },
+              fields={[
+                'jetAttenue',
+                'armureSacree',
+                'durACuire',
+                'ethere',
+                'vulnerable',
+                'immuJambes',
+                'immuTete',
+                'immuSonne',
               ]}
+              inputs={inputs}
               setInputs={setInputs}
             />
           </Grid>

@@ -1,23 +1,25 @@
 import TextField from '@mui/material/TextField';
 import { inputsType } from '@/constants/inputs';
+import { inputDisabledType } from '@/constants/inputsInfo';
 
 type propTypes = {
-  value?: number;
   name: keyof inputsType;
   label: string;
-  disabled?: boolean;
+  disabled?: inputDisabledType;
   range?: [number, number];
+  inputs: inputsType;
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
 };
 
 export default function InputNumber({
-  value,
   name,
   label,
   disabled,
   range,
+  inputs,
   setInputs,
 }: propTypes) {
+  const value = inputs[name] as number | undefined;
   const isError = !Number.isInteger(value);
   return (
     <TextField
@@ -31,7 +33,7 @@ export default function InputNumber({
           [name]: parseInt(event.target.value),
         }));
       }}
-      disabled={disabled}
+      disabled={disabled?.some(([field, callback]) => callback(inputs[field]))}
       error={isError}
       helperText={isError ? 'Champ obligatoire' : null}
       inputProps={{
