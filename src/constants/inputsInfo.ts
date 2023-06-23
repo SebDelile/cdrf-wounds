@@ -33,7 +33,7 @@ export type inputsInfoType = {
   [key in keyof inputsType]: inputInfoType;
 };
 
-export const inputsInfo: inputsInfoType = {
+export const INPUTS_INFO: inputsInfoType = {
   FORmoinsRES: {
     label: 'FOR moins RES',
     description:

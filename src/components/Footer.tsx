@@ -1,5 +1,6 @@
 import { grey } from '@mui/material/colors';
 import { Box } from '@mui/system';
+import { ExplanationDialog } from './ExplanationDialog';
 
 type propTypes = {};
 
@@ -14,7 +15,7 @@ export default function Footer({}: propTypes) {
           borderTopStyle: 'solid',
         }}
       >
-        yolo
+        <ExplanationDialog />
       </Box>
     </Box>
   );

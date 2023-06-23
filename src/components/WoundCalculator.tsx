@@ -9,11 +9,6 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { initialInputs, inputsType } from '@/constants/inputs';
 import { outputsType, detailledOutputsType } from '@/constants/outputs';
-import {
-  TYPE_CHECKBOX,
-  TYPE_CHECKBOX_AND_VALUE,
-  TYPE_NUMBER,
-} from '@/constants/inputElements';
 import OutputsTable from '@/components/OutputsTable';
 import InputsGroup from '@/components/InputsGroup';
 import BarChart from '@/components/BarChart';

@@ -6,7 +6,7 @@ import {
   TYPE_CHECKBOX_AND_VALUE,
   TYPE_NUMBER,
 } from '@/constants/inputElements';
-import { inputsInfo, inputsInfoType } from '@/constants/inputsInfo';
+import { INPUTS_INFO, inputsInfoType } from '@/constants/inputsInfo';
 import InputNumber from './InputNumber';
 import InputCheckbox from './InputCheckox';
 import InputCheckboxAndValue from './InputCheckboxAndValue';
@@ -32,7 +32,7 @@ export default function InputsGroup({
       {...(row ? { alignItems: 'center' } : { direction: 'column' })}
     >
       {fields.map((field) => {
-        const inputInfo = inputsInfo[field];
+        const inputInfo = INPUTS_INFO[field];
         return (
           <Grid item key={field}>
             {inputInfo.type === TYPE_NUMBER ? (
