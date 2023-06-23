@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import { grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import WoundCalculator from '@/components/WoundCalculator';
 
@@ -25,14 +26,7 @@ export default function Home() {
       <Head>
         <title>CDRF Calcul de blessure</title>
       </Head>
-      <Grid
-        container
-        spacing={4}
-        component={'main'}
-        sx={{
-          padding: '2rem',
-        }}
-      >
+      <Grid container spacing={4} component={'main'}>
         {calculators.map((id) => (
           <Grid
             item
@@ -53,7 +47,7 @@ export default function Home() {
                 left: '20%',
                 bottom: '-26px',
                 width: '60%',
-                border: 'solid #ccc 2px',
+                border: `solid ${grey[400]} 2px`,
               }}
             />
           </Grid>

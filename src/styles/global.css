@@ -1,8 +1,21 @@
+* {
+  box-sizing: border-box;
+}
+
 html,
-body,
-#__next {
+body {
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: #eee;
+  background-color: #eee; /* its grey[200] from MUI*/
+}
+
+#__next {
+  min-height: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 2rem;
 }

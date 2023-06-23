@@ -1,6 +1,7 @@
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import { red } from '@mui/material/colors';
 import Tooltip from './InputTooltip';
 import { inputsType } from '@/constants/inputs';
 import { inputDisabledType } from '@/constants/inputsInfo';
@@ -51,7 +52,7 @@ export default function InputCheckboxWithValue({
             color:
               // error display, as props error seems to be absent even if the doc say yes :(
               value !== null && !Number.isInteger(value)
-                ? '#D32F2F'
+                ? red[700]
                 : 'inherits',
           }}
         />

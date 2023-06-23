@@ -1,27 +1,21 @@
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Paper from '@mui/material/Paper';
+import { grey } from '@mui/material/colors';
 import { Box } from '@mui/system';
 
-type propTypes = {
-  isDebug: boolean;
-  setIsDebug: (arg0: (prevState: boolean) => boolean) => void;
-};
+type propTypes = {};
 
-export default function Footer({ isDebug, setIsDebug }: propTypes) {
+export default function Footer({}: propTypes) {
   return (
-    <Box component="footer" sx={{ padding: '2rem' }}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={isDebug}
-            onChange={() => {
-              setIsDebug((state) => !state);
-            }}
-          />
-        }
-        label="Debug"
-      />
+    <Box component="footer">
+      <Box
+        sx={{
+          paddingTop: '1rem',
+          borderTopColor: grey[400],
+          borderWidth: 2,
+          borderTopStyle: 'solid',
+        }}
+      >
+        yolo
+      </Box>
     </Box>
   );
 }

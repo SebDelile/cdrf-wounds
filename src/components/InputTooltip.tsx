@@ -1,4 +1,5 @@
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { grey } from '@mui/material/colors';
 import { ReactElement } from 'react';
 
 const DELAY = 500;
@@ -22,12 +23,12 @@ export default function InputTooltip({ title, children }: propTypes) {
             fontWeight: 'normal',
             lineHeight: '1.5em',
             p: 2,
-            backgroundColor: '#616161',
+            backgroundColor: grey[700],
           },
         },
         arrow: {
           sx: {
-            color: '#616161',
+            color: grey[700],
           },
         },
       }}
