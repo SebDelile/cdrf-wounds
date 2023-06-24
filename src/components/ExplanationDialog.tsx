@@ -54,7 +54,7 @@ export function ExplanationDialog({}) {
         >
           <DialogContentText>{EXPLANATION.intro}</DialogContentText>
           <DialogContentText>{EXPLANATION.rule}</DialogContentText>
-          <Accordion>
+          <Accordion disableGutters sx={{ borderRadius: '0.25rem !important' }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <DialogContentText>Tableau des blessures</DialogContentText>
             </AccordionSummary>
@@ -80,7 +80,13 @@ export function ExplanationDialog({}) {
           </DialogContentText>
           <DialogContentText>{EXPLANATION.resultReading}</DialogContentText>
           <DialogContentText>{EXPLANATION.EffectsIntro}</DialogContentText>
-          <Accordion sx={{ margin: '0 !important' }}>
+          <Accordion
+            disableGutters
+            sx={{
+              borderRadius: '0.25rem !important',
+              '&::before': { height: 0 },
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <DialogContentText>Détail des Effets</DialogContentText>
             </AccordionSummary>

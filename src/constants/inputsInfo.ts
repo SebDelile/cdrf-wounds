@@ -43,7 +43,7 @@ export const INPUTS_INFO: inputsInfoType = {
   double6Tue: {
     label: '6-6 = Tué net',
     description:
-      'Si les dés du jet de blessure indique un double 6, le résultat est automatiquement Tué net.',
+      'Si les dés du jet de blessure indiquent un double 6, le résultat est automatiquement Tué net.',
     type: TYPE_CHECKBOX,
   },
   //
@@ -57,7 +57,7 @@ export const INPUTS_INFO: inputsInfoType = {
   armeSacree: {
     label: 'Arme sacrée',
     description:
-      'Si les dés du jet de blessure indique un double, le résultat est automatiquement Tué net.',
+      'Si les dés du jet de blessure indiquent un double, le résultat est automatiquement Tué net.',
     type: TYPE_CHECKBOX,
     disabled: [['armureSacree', (fieldValue) => !!fieldValue]],
   },
@@ -88,13 +88,13 @@ export const INPUTS_INFO: inputsInfoType = {
   vapeurFOR: {
     label: 'Vapeur/FOR',
     description:
-      "L'agresseur bénéficie d'un bonus de FOR de + 1 dé 6. Toutes les possibilités sont calculées. L'incident sur un 1 au jet de vapeur n'est pas pris en compte.",
+      "L'agresseur bénéficie d'un bonus de FOR de +1 à +6 (résultat d'un dé). Toutes les possibilités sont calculées. L'incident sur un 1 au jet de vapeur n'est pas pris en compte.",
     type: TYPE_CHECKBOX,
   },
   toxique: {
     label: 'Toxique/X',
     description:
-      "Si le résultats du jet de blessure est une 'Blessure Légère' ou mieux, un dé est lancé. Si le résultat est supérieur à X, la blessure est aggravé d'un cran, s'il est inférieur ou égale, la blessure est aggravée de 2 crans.",
+      "Si le résultats du jet de blessure est une 'Blessure Légère' ou mieux, un dé est lancé. Si le résultat est supérieur à X, une blessure légère est ajoutée au résultat, s'il est inférieur ou égal, une blessure grave est ajoutée au résultat.",
     type: TYPE_CHECKBOX_AND_VALUE,
     range: [0, 6],
   },
@@ -109,7 +109,7 @@ export const INPUTS_INFO: inputsInfoType = {
   armureSacree: {
     label: 'Armure sacrée',
     description:
-      "Si les dés du jet de blessure indique un double, le résultat est automatiquement 'Aucun effet' (prévaut sur Arme Sacrée).",
+      "Si les dés du jet de blessure indiquent un double, le résultat est automatiquement 'Aucun effet' (prévaut sur Arme Sacrée).",
     type: TYPE_CHECKBOX,
     impliedChanges: [
       [

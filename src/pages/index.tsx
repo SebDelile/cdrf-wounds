@@ -26,6 +26,7 @@ export default function Home() {
       <Head>
         <title>CDRF Calcul de blessure</title>
       </Head>
+      <h1 hidden>Calculateur de blessure CDRF</h1>
       <Grid container spacing={4} component={'main'}>
         {calculators.map((id) => (
           <Grid

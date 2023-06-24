@@ -27,8 +27,8 @@ export default function InputCheckboxWithValue({
 }: propTypes) {
   const value = inputs[name] as null | number;
   return (
-    <Tooltip title={description}>
-      <>
+    <>
+      <Tooltip title={description}>
         <FormControlLabel
           control={
             <Checkbox
@@ -56,31 +56,31 @@ export default function InputCheckboxWithValue({
                 : 'inherits',
           }}
         />
-        {value !== null ? (
-          <TextField
-            id={`input-${name}`}
-            type="number"
-            value={value}
-            onChange={(event) => {
-              setInputs((state) => ({
-                ...state,
-                [name]: parseInt(event.target.value),
-              }));
-            }}
-            disabled={disabled?.some(([field, callback]) =>
-              callback(inputs[field])
-            )}
-            error={!Number.isInteger(value)}
-            inputProps={{
-              ...(range && {
-                min: range[0],
-                max: range[1],
-              }),
-            }}
-            size="small"
-          />
-        ) : null}
-      </>
-    </Tooltip>
+      </Tooltip>
+      {value !== null ? (
+        <TextField
+          id={`input-${name}`}
+          type="number"
+          value={value}
+          onChange={(event) => {
+            setInputs((state) => ({
+              ...state,
+              [name]: parseInt(event.target.value),
+            }));
+          }}
+          disabled={disabled?.some(([field, callback]) =>
+            callback(inputs[field])
+          )}
+          error={!Number.isInteger(value)}
+          inputProps={{
+            ...(range && {
+              min: range[0],
+              max: range[1],
+            }),
+          }}
+          size="small"
+        />
+      ) : null}
+    </>
   );
 }
