@@ -8,10 +8,13 @@ export const EXPLANATION = {
     "Le résultat le plus élevé est ajouté à la valeur courante de la Force de l'attaquant à laquelle on retranche la valeur courante de la Résistance de la cible. Le résultat détermine la ligne qui doit être consultée dans le Tableau des Blessures.",
   resultReading:
     "L'intersection de la colonne et de la ligne indique le résultat de la Blessure.",
+  EffectsIntro:
+    'Différents effets peuvent intervenir pour modifier le résultat du jet de Blessure :',
   linkCDRFTextIntro: 'Voir les règles complètes sur le ',
   linkCDRFText: 'site de la Confédération du Dragon Rouge Francophone',
   linkCDRFUrl:
     'https://confederation-dragon-rouge.fr/format-conffederation/regles/',
-  EffectsIntro:
-    'Différents effets peuvent intervenir pour modifier le résultat du jet de Blessure :',
+  linkGitHubTextIntro: 'Voir le code source sur ',
+  linkGitHubText: 'GitHub',
+  linkGitHubUrl: 'https://github.com/SebDelile/cdrf-wounds',
 };

@@ -111,7 +111,15 @@ export function ExplanationDialog({}) {
             </AccordionDetails>
           </Accordion>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'flex-start', p: '1rem 1.5rem' }}>
+        <DialogActions
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            p: '1rem 1.5rem',
+          }}
+        >
           <DialogContentText>
             {EXPLANATION.linkCDRFTextIntro}
             <a
@@ -120,6 +128,17 @@ export function ExplanationDialog({}) {
               rel="noopener noreferrer"
             >
               {EXPLANATION.linkCDRFText}
+            </a>
+            {'.'}
+          </DialogContentText>
+          <DialogContentText sx={{ margin: '0 !important' }}>
+            {EXPLANATION.linkGitHubTextIntro}
+            <a
+              href={EXPLANATION.linkGitHubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {EXPLANATION.linkGitHubText}
             </a>
             {'.'}
           </DialogContentText>
