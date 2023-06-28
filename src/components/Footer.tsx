@@ -3,6 +3,9 @@ import { Box } from '@mui/system';
 import { ExplanationDialog } from './ExplanationDialog';
 import Image from 'next/image';
 import logoCDRF from 'public/logo-transparent.png';
+import { Typography } from '@mui/material';
+
+const version = process.env.NEXT_PUBLIC_APP_VERSION;
 
 type propTypes = {};
 
@@ -21,7 +24,20 @@ export default function Footer({}: propTypes) {
         }}
       >
         <ExplanationDialog />
-        <Image src={logoCDRF} width={36} height={36} alt="logo CDRF" />
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+          }}
+        >
+          <Typography variant="caption">
+            {process.env.NODE_ENV === 'development'
+              ? 'dev mode'
+              : `version ${version}`}
+          </Typography>
+          <Image src={logoCDRF} width={36} height={36} alt="logo CDRF" />
+        </Box>
       </Box>
     </Box>
   );
