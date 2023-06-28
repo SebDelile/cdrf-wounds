@@ -15,12 +15,19 @@ type propTypes = {
 const CHART_MARGIN = 25;
 
 const BAR_COLORS = [
-  '#F5C5C5',
-  '#FFA85B',
-  '#F3750F',
-  '#EF0506',
-  '#AE0405',
-  '#2AA0606',
+  [244, 197, 197],
+  [255, 168, 91],
+  [242, 117, 15],
+  [205, 5, 5],
+  [121, 5, 5],
+  [50, 5, 5],
+];
+
+const GRADIENT_INFO: [string, number][] = [
+  ['0%', -0.3],
+  ['10%', 0.1],
+  ['90%', -0.05],
+  ['100%', 0.35],
 ];
 
 export default function BarChart({
@@ -117,6 +124,39 @@ export default function BarChart({
         .call(d3.axisRight(y).tickValues([]).tickSize(0))
         .attr('transform', `translate(${containerWidth - CHART_MARGIN},0)`);
 
+      //add gradient elements
+      svg
+        .selectAll('.gradients')
+        .data(chartData)
+        .join((enter) => {
+          const gradient = enter
+            .append('linearGradient')
+            .attr('class', 'gradients')
+            .attr('id', (d) => `gradient-${d.color.join('-')}`)
+            .attr('x1', '0%')
+            .attr('x2', '100%')
+            .attr('y1', '0%')
+            .attr('y2', '0%');
+
+          GRADIENT_INFO.forEach(([offset, colorModif]) =>
+            gradient
+              .append('stop')
+              .attr('offset', offset)
+              .attr(
+                'stop-color',
+                (d) =>
+                  `rgb(${d.color
+                    .map((color) =>
+                      Math.floor(
+                        Math.min(Math.max(color / 255 + colorModif, 0), 1) * 255
+                      )
+                    )
+                    .join(',')})`
+              )
+          );
+          return gradient;
+        });
+
       // pop the rect in the charts
       svg
         .selectAll('.bars')
@@ -125,7 +165,8 @@ export default function BarChart({
         .append('rect')
         .attr('class', 'bars')
         .attr('stroke', 'black')
-        .attr('fill', (d) => d.color)
+        .attr('fill', (d) => `url(#gradient-${d.color.join('-')})`)
+        .attr('style', 'border-radius: 16')
         // the exclamation mark fix a typescript issue to remove undefined from union
         .attr('x', (d) => x(d.label)!)
         .attr('width', x.bandwidth())
