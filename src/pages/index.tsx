@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { grey } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import WoundCalculator from '@/components/WoundCalculator';
+import { SvgLinearGradient } from '@/components/SvgLinearGradient';
 
 export default function Home() {
   const [calculators, setCalculators] = useState<number[]>([0]);
@@ -28,6 +29,7 @@ export default function Home() {
       </Head>
       <h1 hidden>Calculateur de blessure CDRF</h1>
       <Grid container spacing={4} component={'main'}>
+        <SvgLinearGradient />
         {calculators.map((id) => (
           <Grid
             item

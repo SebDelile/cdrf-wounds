@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { outputsType, initialOutputs } from '@/constants/outputs';
 import { woundResultsLabels } from '@/constants/woundResults';
+import { BAR_COLORS } from '@/constants/chartColorSet';
 import { usePrevious } from '@/utils/usePrevious';
-import { Box } from '@mui/material';
 import useResize from '@/utils/useResize';
 
 type propTypes = {
@@ -13,22 +13,6 @@ type propTypes = {
 };
 
 const CHART_MARGIN = 25;
-
-const BAR_COLORS = [
-  [244, 197, 197],
-  [255, 168, 91],
-  [242, 117, 15],
-  [205, 5, 5],
-  [121, 5, 5],
-  [50, 5, 5],
-];
-
-const GRADIENT_INFO: [string, number][] = [
-  ['0%', -0.3],
-  ['10%', 0.1],
-  ['90%', -0.05],
-  ['100%', 0.35],
-];
 
 export default function BarChart({
   data,
@@ -123,40 +107,6 @@ export default function BarChart({
         .append('g')
         .call(d3.axisRight(y).tickValues([]).tickSize(0))
         .attr('transform', `translate(${containerWidth - CHART_MARGIN},0)`);
-
-      // TODO refacto this outside of component to avoid duplication of ID
-      //add gradient elements
-      svg
-        .selectAll('.gradients')
-        .data(chartData)
-        .join((enter) => {
-          const gradient = enter
-            .append('linearGradient')
-            .attr('class', 'gradients')
-            .attr('id', (d) => `gradient-${d.color.join('-')}`)
-            .attr('x1', '0%')
-            .attr('x2', '100%')
-            .attr('y1', '0%')
-            .attr('y2', '0%');
-
-          GRADIENT_INFO.forEach(([offset, colorModif]) =>
-            gradient
-              .append('stop')
-              .attr('offset', offset)
-              .attr(
-                'stop-color',
-                (d) =>
-                  `rgb(${d.color
-                    .map((color) =>
-                      Math.floor(
-                        Math.min(Math.max(color / 255 + colorModif, 0), 1) * 255
-                      )
-                    )
-                    .join(',')})`
-              )
-          );
-          return gradient;
-        });
 
       // draw a rect with both top corners being rounded
       const drawBar = (label: string, value: number): string => {
