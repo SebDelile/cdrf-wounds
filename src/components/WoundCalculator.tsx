@@ -12,6 +12,7 @@ import { outputsType, detailledOutputsType } from '@/constants/outputs';
 import OutputsTable from '@/components/OutputsTable';
 import InputsGroup from '@/components/InputsGroup';
 import BarChart from '@/components/BarChart';
+import TotemChart from './TotemChart';
 import {
   getFormattedOutputsAsCumulativePercentage,
   getFormattedOutputsAsPercentage,
@@ -129,11 +130,10 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
                 containerRef={ResultContainerRef}
               />,
 
-              <BarChart
+              <TotemChart
                 key={1}
                 data={getFormattedOutputsAsCumulativePercentage(outputs)}
                 containerRef={ResultContainerRef}
-                hideFirstValue={true}
               />,
               <OutputsTable key={2} outputs={outputs} />,
               <OutputsList

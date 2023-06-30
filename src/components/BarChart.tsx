@@ -14,11 +14,7 @@ type propTypes = {
 
 const CHART_MARGIN = 25;
 
-export default function BarChart({
-  data,
-  containerRef,
-  hideFirstValue = false,
-}: propTypes) {
+export default function BarChart({ data, containerRef }: propTypes) {
   const svgNode = useRef(null);
   const previousData = usePrevious(data, initialOutputs);
   const [containerWidth, containerHeight] = useResize(containerRef);
@@ -32,14 +28,11 @@ export default function BarChart({
     ) {
       // format the data
       const chartData = data.map((value, i) => ({
-        label: `${woundResultsLabels[i]}${
-          hideFirstValue && i !== 5 ? ' ou +' : ''
-        }`,
+        label: woundResultsLabels[i],
         value,
         prevValue: previousData[i],
         color: BAR_COLORS[i],
       }));
-      if (hideFirstValue) chartData.shift();
       const chartTransition = d3
         .transition()
         .duration(500)
@@ -142,6 +135,7 @@ export default function BarChart({
         .append('text')
         .attr('class', 'label')
         .attr('text-anchor', 'middle')
+        .attr('font-family', 'sans-serif')
         .attr('x', (d) => x(d.label)!)
         .attr('dx', x.bandwidth() / 2)
         .attr('dy', '-0.25em')
@@ -155,7 +149,7 @@ export default function BarChart({
         svg.selectAll('*').remove();
       };
     }
-  }, [data, previousData, hideFirstValue, containerWidth, containerHeight]);
+  }, [data, previousData, containerWidth, containerHeight]);
 
   return <svg ref={svgNode} width={containerWidth} height={containerHeight} />;
 }
