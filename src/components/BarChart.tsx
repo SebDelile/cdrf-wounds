@@ -124,6 +124,7 @@ export default function BarChart({
         .call(d3.axisRight(y).tickValues([]).tickSize(0))
         .attr('transform', `translate(${containerWidth - CHART_MARGIN},0)`);
 
+      // TODO refacto this outside of component to avoid duplication of ID
       //add gradient elements
       svg
         .selectAll('.gradients')
@@ -157,24 +158,31 @@ export default function BarChart({
           return gradient;
         });
 
+      // draw a rect with both top corners being rounded
+      const drawBar = (label: string, value: number): string => {
+        const chartHeight = containerHeight - CHART_MARGIN;
+        const barHeight = chartHeight - y(value);
+        const barWidth = x.bandwidth();
+        const barRadius = barWidth / 8;
+        const v = barHeight <= barRadius ? 0 : barHeight - barRadius;
+        const q = barHeight <= barRadius ? barHeight : barRadius;
+        const h = barWidth - 2 * q;
+        //prettier-ignore
+        return `M${x(label)},${chartHeight}v${-v}q${0},${-q} ${q},${-q}h${h}q${q},${0} ${q},${q}v${v}z`;
+      };
+
       // pop the rect in the charts
       svg
         .selectAll('.bars')
         .data(chartData)
         .enter()
-        .append('rect')
+        .append('path')
         .attr('class', 'bars')
         .attr('stroke', 'black')
         .attr('fill', (d) => `url(#gradient-${d.color.join('-')})`)
-        .attr('style', 'border-radius: 16')
-        // the exclamation mark fix a typescript issue to remove undefined from union
-        .attr('x', (d) => x(d.label)!)
-        .attr('width', x.bandwidth())
-        .attr('y', (d) => y(d.prevValue))
-        .attr('height', (d) => containerHeight - CHART_MARGIN - y(d.prevValue))
+        .attr('d', (d) => drawBar(d.label, d.prevValue))
         .transition(chartTransition)
-        .attr('y', (d) => y(d.value))
-        .attr('height', (d) => containerHeight - CHART_MARGIN - y(d.value));
+        .attr('d', (d) => drawBar(d.label, d.value));
 
       // add labels to the rect
       svg
