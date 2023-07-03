@@ -1,38 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CDRF wounds
 
-## Getting Started
+CDRF wound is an app to simulate the probability to achieve given result depending on a set of inputs. It relies on the game Confrontation (version CDRF). A link to the description of the basic mechanism and effect of inputs is given in the footer.
 
-First, run the development server:
+A **demo** is hosted on Vercel here : https://cdrf-wounds.vercel.app/
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+![app-preview](/docs/screenshot-homepage-v1.0.0.jpg)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How to begin with the project
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+You need to first install [node](https://nodejs.org/en/) (v14.15.4 or later) on your device in order to run `npm` commands and [git](https://git-scm.com/) to run the `git` commands.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+To install the project :
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+1. clone this repo with `git clone https://github.com/SebDelile/cdrf-wounds.git`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2. then go to the new folder with `cd cdrf-wounds`
 
-## Learn More
+3. install all dependencies with `npm ci`
 
-To learn more about Next.js, take a look at the following resources:
+Then you can start working on the project ! See the script section to learn how to run the project.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Main dependencies
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+The project is a single page application powered by Next JS. it uses :
 
-## Deploy on Vercel
+- **react** and **react-dom** as a basis to write react components
+- **next** for the dev server, build tools and some custom components
+- **typescript** to use ts and tsx files, allowing static typing
+- **Material UI** as a component library (it includes **Emotion** as peer dependency)
+- **d3** to build the charts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Available scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+In the project, you can run:
+
+### `npm run dev`
+
+Starts Next.js in development mode. Open [http://localhost:3000](http://localhost:3000) to see the app in the browser. The page is automatically reload if you make edit to the code. you will also see lint messages in the console.
+
+### `npm run build`
+
+Generates an optimized version of your application for production. This standard output includes:
+
+- HTML files for pages using getStaticProps or Automatic Static Optimization
+- CSS files for global styles or for individually scoped styles
+- JavaScript for pre-rendering dynamic content from the Next.js server
+- JavaScript for interactivity on the client-side through React
+
+This output is generated inside the `.next` folder.
+
+It is worth noting there is a `prebuild` script to automatically update the app version in the `.env.local` file from the `package.json` file
+
+### `npm run start`
+
+Starts the application in production mode. The application should be compiled with `npm run build` first.
+
+Open [http://localhost:4000](http://localhost:4000) to see the app in the browser.
+
+### `npm run lint`
+
+Runs ESLint for all files in the `pages`, `components`, `lib`, `data` and `utils` directories. It also provides a guided setup to install any required dependencies if ESLint is not already configured in your application.
