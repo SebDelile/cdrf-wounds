@@ -2,20 +2,19 @@ import { dice, diceType } from '@/constants/dice';
 import { inputsType } from '@/constants/inputs';
 import {
   outputsType,
-  detailledOutputsType,
+  detailledOutputType,
   initialOutputs,
 } from '@/constants/outputs';
 import { woundIntensityType } from '@/constants/woundIntensity';
 import { readWoundTable } from './readWoundTable';
 import { setupWoundTable } from './setupWoundTable';
-import { formatDetailledOutput } from './formatDetailledOutput';
 
 export const computeResults = (
   inputs: inputsType
-): [outputsType, detailledOutputsType] => {
+): [outputsType, detailledOutputType[]] => {
   //initialize
   const outputResults = [...initialOutputs] as outputsType;
-  const detailledOutputs: detailledOutputsType = [];
+  const detailledOutputs: detailledOutputType[] = [];
   const woundTable = setupWoundTable(inputs);
   const {
     FORmoinsRES,
@@ -67,13 +66,11 @@ export const computeResults = (
           : readWoundTable(woundTable, d1, getIntensity(d1));
       // handle dice are all same (triple for 3 dice roll, double, for 2 dice roll)
       outputResults[result]++;
-      detailledOutputs.push(
-        formatDetailledOutput({
-          dice: has3dice ? [d1, d1, d1] : [d1, d1],
-          vapeurBonus,
-          result,
-        })
-      );
+      detailledOutputs.push({
+        dice: has3dice ? [d1, d1, d1] : [d1, d1],
+        vapeurBonus,
+        result,
+      });
       // handle other doubles for 3 dice rolls (only double with the 2 dice being used)
       if (has3dice) {
         dice
@@ -85,13 +82,11 @@ export const computeResults = (
               [d1, d3, d1],
               [d3, d1, d1],
             ].forEach((dice) => {
-              detailledOutputs.push(
-                formatDetailledOutput({
-                  dice,
-                  vapeurBonus,
-                  result,
-                })
-              );
+              detailledOutputs.push({
+                dice,
+                vapeurBonus,
+                result,
+              });
             });
           });
       }
@@ -116,13 +111,11 @@ export const computeResults = (
                   [d2, d1, d3],
                   [d2, d3, d1],
                 ].forEach((dice) => {
-                  detailledOutputs.push(
-                    formatDetailledOutput({
-                      dice,
-                      vapeurBonus,
-                      result,
-                    })
-                  );
+                  detailledOutputs.push({
+                    dice,
+                    vapeurBonus,
+                    result,
+                  });
                 });
 
                 // three more possibilities if all three dice are different
@@ -133,13 +126,11 @@ export const computeResults = (
                     [d3, d1, d2],
                     [d3, d2, d1],
                   ].forEach((dice) => {
-                    detailledOutputs.push(
-                      formatDetailledOutput({
-                        dice,
-                        vapeurBonus,
-                        result,
-                      })
-                    );
+                    detailledOutputs.push({
+                      dice,
+                      vapeurBonus,
+                      result,
+                    });
                   });
                 }
               });
@@ -150,13 +141,11 @@ export const computeResults = (
               [d1, d2],
               [d2, d1],
             ].forEach((dice) => {
-              detailledOutputs.push(
-                formatDetailledOutput({
-                  dice,
-                  vapeurBonus,
-                  result,
-                })
-              );
+              detailledOutputs.push({
+                dice,
+                vapeurBonus,
+                result,
+              });
             });
           }
         });

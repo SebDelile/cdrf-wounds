@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { initialInputs, inputsType } from '@/constants/inputs';
-import { outputsType, detailledOutputsType } from '@/constants/outputs';
+import { outputsType, detailledOutputType } from '@/constants/outputs';
 import OutputsTable from '@/components/OutputsTable';
 import InputsGroup from '@/components/InputsGroup';
 import BarChart from '@/components/BarChart';
@@ -36,7 +36,7 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
   // better use useMemo over useState/useEffect to avoid 2 renders instead of one
   // second parameter is isDebug flag (to log the detailled results)
   const [outputs, detailledOutputs] = useMemo<
-    [outputsType, detailledOutputsType]
+    [outputsType, detailledOutputType[]]
   >(() => computeResults(inputs), [inputs]);
 
   const ResultContainerRef = useRef(null);
@@ -140,6 +140,7 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
                 key={3}
                 detailledOutputs={detailledOutputs}
                 containerRef={ResultContainerRef}
+                isVapeurBonus={inputs.vapeurFOR}
                 isToxic={inputs.toxique !== null}
               />,
             ].map((child, index) => (currentTab === index ? child : null))}

@@ -13,19 +13,21 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import WarningIcon from '@mui/icons-material/Warning';
 
-import { detailledOutputsType } from '@/constants/outputs';
+import { detailledOutputType } from '@/constants/outputs';
 import { woundResultsLabels, woundResultsType } from '@/constants/woundResults';
 import { diceType } from '@/constants/dice';
 import { localisations } from '@/constants/woundTable';
 import useResize from '@/utils/useResize';
+import { concatDetailledOutput } from '@/utils/concatDetailledOutput';
 
 type propTypes = {
-  detailledOutputs: detailledOutputsType;
+  detailledOutputs: detailledOutputType[];
   containerRef: React.RefObject<Element>;
+  isVapeurBonus: boolean;
   isToxic: boolean;
 };
 
-type fieldsType = 'dices' | 'result';
+type fieldsType = 'dice' | 'result' | 'vapeurBonus';
 type columnsType = {
   field: fieldsType;
   headerName: string;
@@ -36,48 +38,51 @@ type filterOptionType = diceType | woundResultsType | 'Tout';
 export default function OutputsList({
   detailledOutputs,
   containerRef,
+  isVapeurBonus,
   isToxic,
 }: propTypes) {
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = useState<fieldsType>('dices');
+  const [order, setOrder] = useState<1 | -1>(1);
+  const [orderBy, setOrderBy] = useState<fieldsType>('dice');
   const [filter, setFilter] = useState<filterType>('Aucun');
   const [filterOption, setFilterOption] = useState<filterOptionType>('Tout');
 
   const [_, containerHeight] = useResize(containerRef);
 
-  const rows: detailledOutputsType = useMemo(
+  const rows: detailledOutputType[] = useMemo(
     () =>
       [...detailledOutputs]
-        .filter((output) => {
+        .filter(({ dice, result }) => {
           if (filterOption === 'Tout') return true;
           switch (filter) {
             case 'Localisation': {
-              // retrieve the individual dice and get the lower
-              const minDice = output.dices
-                .split(' (vapeur')[0]
-                .split(' - ')
-                .map(Number)
-                .sort()[0];
+              const minDice = [...dice].sort()[0];
               return (
                 filterOption === minDice ||
                 (minDice === 6 && filterOption === 5)
               );
             }
             case 'Résultat':
-              return filterOption === output.result;
+              return filterOption === result;
             default:
               return true;
           }
         })
-        .sort(
-          (a, b) =>
-            (order === 'asc' ? 1 : -1) * (a[orderBy] > b[orderBy] ? 1 : -1)
-        ),
+        .sort((a, b) => {
+          const primaryOrderByResult =
+            a[orderBy] > b[orderBy] ? 1 : a[orderBy] < b[orderBy] ? -1 : 0;
+          // if there is equality, it's ordered according to dice>vapeurBonus>result
+
+          return primaryOrderByResult
+            ? order * primaryOrderByResult
+            : order *
+                (concatDetailledOutput(a) > concatDetailledOutput(b) ? 1 : -1);
+        }),
     [detailledOutputs, filter, filterOption, order, orderBy]
   );
 
   const columns: columnsType[] = [
-    { field: 'dices', headerName: 'Dés' },
+    { field: 'dice', headerName: 'Dés' },
+    { field: 'vapeurBonus', headerName: 'Bonus' },
     { field: 'result', headerName: 'Résultat' },
   ];
 
@@ -169,37 +174,55 @@ export default function OutputsList({
         <Table size="small" stickyHeader>
           <TableHead>
             <TableRow>
-              {columns.map(({ field, headerName }) => (
-                <TableCell
-                  key={field}
-                  sortDirection={orderBy === field ? order : false}
-                >
-                  <TableSortLabel
-                    active={orderBy === field}
-                    direction={orderBy === field ? order : 'asc'}
-                    onClick={() => {
-                      const isAsc = orderBy === field && order === 'asc';
-                      setOrder(isAsc ? 'desc' : 'asc');
-                      setOrderBy(field);
-                    }}
+              {columns
+                .filter(({ field }) => field !== 'vapeurBonus' || isVapeurBonus)
+                .map(({ field, headerName }) => (
+                  <TableCell
+                    key={field}
+                    sortDirection={
+                      orderBy === field
+                        ? order === -1
+                          ? 'desc'
+                          : 'asc'
+                        : false
+                    }
                   >
-                    {headerName}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
+                    <TableSortLabel
+                      active={orderBy === field}
+                      direction={
+                        orderBy === field && order === -1 ? 'desc' : 'asc'
+                      }
+                      onClick={() => {
+                        setOrder(orderBy === field && order === 1 ? -1 : 1);
+                        setOrderBy(field);
+                      }}
+                    >
+                      {headerName}
+                    </TableSortLabel>
+                  </TableCell>
+                ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.length ? (
-              rows.map(({ dices, result }) => (
-                <TableRow key={dices}>
-                  <TableCell>{dices}</TableCell>
-                  <TableCell>{woundResultsLabels[result]}</TableCell>
-                </TableRow>
-              ))
+              rows.map(({ dice, vapeurBonus, result }) => {
+                return (
+                  <TableRow
+                    key={concatDetailledOutput({ dice, vapeurBonus, result })}
+                  >
+                    <TableCell>{dice.join('-')}</TableCell>
+                    {isVapeurBonus && (
+                      <TableCell>{`vapeur ${vapeurBonus}`}</TableCell>
+                    )}
+                    <TableCell>{woundResultsLabels[result]}</TableCell>
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
-                <TableCell colSpan={2}>Aucun résultat</TableCell>
+                <TableCell colSpan={isVapeurBonus ? 3 : 2}>
+                  Aucun résultat
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
