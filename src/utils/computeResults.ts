@@ -8,13 +8,14 @@ import {
 import { woundIntensityType } from '@/constants/woundIntensity';
 import { readWoundTable } from './readWoundTable';
 import { setupWoundTable } from './setupWoundTable';
+import { woundResultsType } from '@/constants/woundResults';
 
 export const computeResults = (
   inputs: inputsType
 ): [outputsType, detailledOutputType[]] => {
   //initialize
   const outputResults = [...initialOutputs] as outputsType;
-  const detailledOutputs: detailledOutputType[] = [];
+  let detailledOutputs: detailledOutputType[] = [];
   const woundTable = setupWoundTable(inputs);
   const {
     FORmoinsRES,
@@ -65,7 +66,6 @@ export const computeResults = (
           ? 5
           : readWoundTable(woundTable, d1, getIntensity(d1));
       // handle dice are all same (triple for 3 dice roll, double, for 2 dice roll)
-      outputResults[result]++;
       detailledOutputs.push({
         dice: has3dice ? [d1, d1, d1] : [d1, d1],
         vapeurBonus,
@@ -76,7 +76,6 @@ export const computeResults = (
         dice
           .filter((d3) => (jetAttenue ? d3 > d1 : d3 < d1))
           .forEach((d3) => {
-            outputResults[result] += 3;
             [
               [d1, d1, d3],
               [d1, d3, d1],
@@ -105,7 +104,6 @@ export const computeResults = (
               .filter((d3) => (jetAttenue ? d3 >= d2 : d3 <= d2))
               .forEach((d3) => {
                 // three possible positions for 1st dice
-                outputResults[result] += 3;
                 [
                   [d1, d2, d3],
                   [d2, d1, d3],
@@ -120,7 +118,6 @@ export const computeResults = (
 
                 // three more possibilities if all three dice are different
                 if (d2 !== d3) {
-                  outputResults[result] += 3;
                   [
                     [d1, d3, d2],
                     [d3, d1, d2],
@@ -136,7 +133,6 @@ export const computeResults = (
               });
           } else {
             // two possible positions for both dice
-            outputResults[result] += 2;
             [
               [d1, d2],
               [d2, d1],
@@ -153,27 +149,28 @@ export const computeResults = (
   });
 
   if (toxique !== null && Number.isInteger(toxique)) {
-    // only for results with an actual wound (not "rien" & "sonné")
-    // each result is splitted in two, one with the failed toxique test part (result+=1), the other with the success toxic test part (result+=2)
-    // example: {result: resulValue} gives [result+1, resultValue*failedPart] & [result+2, resultValue*successedPart],
-    const woundsAfterToxic = [2, 3, 4, 5].flatMap((i) => [
-      [
-        Math.min(1 + i + Number(vulnerable) - Number(ethere), 5),
-        (1 - toxique / 6) * outputResults[i], // toxic test failed
-      ],
-      [
-        Math.min(2 + i + Number(vulnerable) - Number(ethere), 5),
-        (toxique / 6) * outputResults[i], //toxic test successed
-      ],
-    ]);
-    // all the results are collapsed to give back the outputResults array
-    [2, 3, 4, 5].forEach((i) => {
-      outputResults[i] = woundsAfterToxic.reduce(
-        (acc, cur) => (cur[0] === i ? acc + cur[1] : acc),
-        0
-      );
-    });
+    // only for results with an actual wound (not "rien", "sonné", "tué net")
+    // each result is splitted in 6, with an increase of the result depending on the success of toxique test
+    detailledOutputs = detailledOutputs.flatMap((detailledOutput) =>
+      [2, 3, 4].includes(detailledOutput.result)
+        ? dice.map((toxiqueDice) => ({
+            ...detailledOutput,
+            result: Math.min(
+              5,
+              detailledOutput.result +
+                (toxiqueDice > toxique ? 1 : 2) +
+                Number(vulnerable) -
+                Number(ethere)
+            ) as woundResultsType,
+          }))
+        : detailledOutput
+    );
   }
+
+  // compile the (simplified) outputs from the detailledOutputs
+  detailledOutputs.forEach(({ result }) => {
+    outputResults[result]++;
+  });
 
   return [outputResults, detailledOutputs];
 };
