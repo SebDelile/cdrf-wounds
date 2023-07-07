@@ -11,7 +11,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import WarningIcon from '@mui/icons-material/Warning';
 
 import { detailledOutputType } from '@/constants/outputs';
 import { woundResultsLabels, woundResultsType } from '@/constants/woundResults';
@@ -27,7 +26,7 @@ type propTypes = {
   isToxic: boolean;
 };
 
-type fieldsType = 'dice' | 'result' | 'vapeurBonus';
+type fieldsType = 'dice' | 'result' | 'bonus';
 type columnsType = {
   field: fieldsType;
   headerName: string;
@@ -70,7 +69,7 @@ export default function OutputsList({
         .sort((a, b) => {
           const primaryOrderByResult =
             a[orderBy] > b[orderBy] ? 1 : a[orderBy] < b[orderBy] ? -1 : 0;
-          // if there is equality, it's ordered according to dice>vapeurBonus>result
+          // if there is equality, it's ordered according to dice>bonus>result
 
           return primaryOrderByResult
             ? order * primaryOrderByResult
@@ -80,9 +79,11 @@ export default function OutputsList({
     [detailledOutputs, filter, filterOption, order, orderBy]
   );
 
+  const isBonus = isToxic || isVapeurBonus;
+
   const columns: columnsType[] = [
     { field: 'dice', headerName: 'Dés' },
-    { field: 'vapeurBonus', headerName: 'Bonus' },
+    { field: 'bonus', headerName: 'Bonus' },
     { field: 'result', headerName: 'Résultat' },
   ];
 
@@ -163,19 +164,13 @@ export default function OutputsList({
           </Select>
         </FormControl>
         <p>{`(${rows.length} / ${detailledOutputs.length})`}</p>
-        {isToxic ? (
-          <WarningIcon
-            color="action"
-            titleAccess="Toxique/X n'est pas pris en compte dans les résultats affichés ci-dessous"
-          />
-        ) : null}
       </Box>
       <TableContainer>
         <Table size="small" stickyHeader>
           <TableHead>
             <TableRow>
               {columns
-                .filter(({ field }) => field !== 'vapeurBonus' || isVapeurBonus)
+                .filter(({ field }) => field !== 'bonus' || isBonus)
                 .map(({ field, headerName }) => (
                   <TableCell
                     key={field}
@@ -205,14 +200,21 @@ export default function OutputsList({
           </TableHead>
           <TableBody>
             {rows.length ? (
-              rows.map(({ dice, vapeurBonus, result }) => {
+              rows.map(({ dice, bonus, result }) => {
                 return (
                   <TableRow
-                    key={concatDetailledOutput({ dice, vapeurBonus, result })}
+                    key={concatDetailledOutput({ dice, bonus, result })}
                   >
                     <TableCell>{dice.join('-')}</TableCell>
-                    {isVapeurBonus && (
-                      <TableCell>{`vapeur ${vapeurBonus}`}</TableCell>
+                    {isBonus && (
+                      <TableCell>
+                        {[
+                          isVapeurBonus ? `vapeur ${bonus[0]}` : null,
+                          isToxic && bonus[1] ? `toxique ${bonus[1]}` : null,
+                        ]
+                          .filter(Boolean)
+                          .join(' / ')}
+                      </TableCell>
                     )}
                     <TableCell>{woundResultsLabels[result]}</TableCell>
                   </TableRow>

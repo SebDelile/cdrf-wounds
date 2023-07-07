@@ -68,7 +68,7 @@ export const computeResults = (
       // handle dice are all same (triple for 3 dice roll, double, for 2 dice roll)
       detailledOutputs.push({
         dice: has3dice ? [d1, d1, d1] : [d1, d1],
-        vapeurBonus,
+        bonus: [vapeurBonus],
         result,
       });
       // handle other doubles for 3 dice rolls (only double with the 2 dice being used)
@@ -83,7 +83,7 @@ export const computeResults = (
             ].forEach((dice) => {
               detailledOutputs.push({
                 dice,
-                vapeurBonus,
+                bonus: [vapeurBonus],
                 result,
               });
             });
@@ -111,7 +111,7 @@ export const computeResults = (
                 ].forEach((dice) => {
                   detailledOutputs.push({
                     dice,
-                    vapeurBonus,
+                    bonus: [vapeurBonus],
                     result,
                   });
                 });
@@ -125,7 +125,7 @@ export const computeResults = (
                   ].forEach((dice) => {
                     detailledOutputs.push({
                       dice,
-                      vapeurBonus,
+                      bonus: [vapeurBonus],
                       result,
                     });
                   });
@@ -139,7 +139,7 @@ export const computeResults = (
             ].forEach((dice) => {
               detailledOutputs.push({
                 dice,
-                vapeurBonus,
+                bonus: [vapeurBonus],
                 result,
               });
             });
@@ -155,6 +155,7 @@ export const computeResults = (
       [2, 3, 4].includes(detailledOutput.result)
         ? dice.map((toxiqueDice) => ({
             ...detailledOutput,
+            bonus: [...detailledOutput.bonus, toxiqueDice],
             result: Math.min(
               5,
               detailledOutput.result +

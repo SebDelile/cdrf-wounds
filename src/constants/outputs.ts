@@ -13,6 +13,6 @@ export type outputsType = [number, number, number, number, number, number];
 // for the list of all results
 export type detailledOutputType = {
   dice: diceType[];
-  vapeurBonus: number;
+  bonus: number[];
   result: woundResultsType;
 };
