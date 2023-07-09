@@ -16,3 +16,11 @@ export type detailledOutputType = {
   bonus: number[];
   result: woundResultsType;
 };
+
+// for the list of all results
+export type groupedDetailledOutputType = {
+  dice: diceType[];
+  bonus: string[] | number[];
+  count?: number;
+  result: woundResultsType;
+};

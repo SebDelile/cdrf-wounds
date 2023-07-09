@@ -141,7 +141,7 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
                 detailledOutputs={detailledOutputs}
                 containerRef={ResultContainerRef}
                 isVapeurBonus={inputs.vapeurFOR}
-                isToxic={inputs.toxique !== null}
+                toxique={inputs.toxique}
               />,
             ].map((child, index) => (currentTab === index ? child : null))}
           </Box>

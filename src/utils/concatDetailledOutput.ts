@@ -1,7 +1,8 @@
-import { detailledOutputType } from '@/constants/outputs';
+import { groupedDetailledOutputType } from '@/constants/outputs';
 
 export const concatDetailledOutput = ({
   dice,
   result,
   bonus,
-}: detailledOutputType) => `${dice.join('')}${bonus.join('')}${result}`;
+}: groupedDetailledOutputType) =>
+  `${dice.join('')}_${bonus.join('')}_${result}`;

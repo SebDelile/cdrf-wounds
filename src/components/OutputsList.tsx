@@ -12,18 +12,22 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-import { detailledOutputType } from '@/constants/outputs';
+import {
+  detailledOutputType,
+  groupedDetailledOutputType,
+} from '@/constants/outputs';
 import { woundResultsLabels, woundResultsType } from '@/constants/woundResults';
 import { diceType } from '@/constants/dice';
 import { localisations } from '@/constants/woundTable';
 import useResize from '@/utils/useResize';
 import { concatDetailledOutput } from '@/utils/concatDetailledOutput';
+import { groupDetailledOutputs } from '@/utils/groupDetailledOutputs';
 
 type propTypes = {
   detailledOutputs: detailledOutputType[];
   containerRef: React.RefObject<Element>;
   isVapeurBonus: boolean;
-  isToxic: boolean;
+  toxique: null | 0 | diceType;
 };
 
 type fieldsType = 'dice' | 'result' | 'bonus';
@@ -38,7 +42,7 @@ export default function OutputsList({
   detailledOutputs,
   containerRef,
   isVapeurBonus,
-  isToxic,
+  toxique,
 }: propTypes) {
   const [order, setOrder] = useState<1 | -1>(1);
   const [orderBy, setOrderBy] = useState<fieldsType>('dice');
@@ -47,9 +51,9 @@ export default function OutputsList({
 
   const [_, containerHeight] = useResize(containerRef);
 
-  const rows: detailledOutputType[] = useMemo(
+  const rows: groupedDetailledOutputType[] = useMemo(
     () =>
-      [...detailledOutputs]
+      groupDetailledOutputs(detailledOutputs, isVapeurBonus, toxique)
         .filter(({ dice, result }) => {
           if (filterOption === 'Tout') return true;
           switch (filter) {
@@ -76,10 +80,23 @@ export default function OutputsList({
             : order *
                 (concatDetailledOutput(a) > concatDetailledOutput(b) ? 1 : -1);
         }),
-    [detailledOutputs, filter, filterOption, order, orderBy]
+    [
+      detailledOutputs,
+      filter,
+      filterOption,
+      isVapeurBonus,
+      order,
+      orderBy,
+      toxique,
+    ]
   );
 
-  const isBonus = isToxic || isVapeurBonus;
+  const rowsCount = useMemo(
+    () => rows.reduce((a, b) => a + (b?.count ?? 1), 0),
+    [rows]
+  );
+
+  const isBonus = toxique !== null || isVapeurBonus;
 
   const columns: columnsType[] = [
     { field: 'dice', headerName: 'Dés' },
@@ -163,7 +180,7 @@ export default function OutputsList({
               : null}
           </Select>
         </FormControl>
-        <p>{`(${rows.length} / ${detailledOutputs.length})`}</p>
+        <p>{`(${rowsCount} / ${detailledOutputs.length})`}</p>
       </Box>
       <TableContainer>
         <Table size="small" stickyHeader>
@@ -200,7 +217,7 @@ export default function OutputsList({
           </TableHead>
           <TableBody>
             {rows.length ? (
-              rows.map(({ dice, bonus, result }) => {
+              rows.map(({ dice, bonus, result, count }) => {
                 return (
                   <TableRow
                     key={concatDetailledOutput({ dice, bonus, result })}
@@ -208,12 +225,16 @@ export default function OutputsList({
                     <TableCell>{dice.join('-')}</TableCell>
                     {isBonus && (
                       <TableCell>
-                        {[
+                        {`${[
                           isVapeurBonus ? `vapeur ${bonus[0]}` : null,
-                          isToxic && bonus[1] ? `toxique ${bonus[1]}` : null,
+                          toxique !== null && bonus[1]
+                            ? `toxique ${bonus[1]}`
+                            : null,
                         ]
                           .filter(Boolean)
-                          .join(' / ')}
+                          .join(' / ')}${
+                          count && count > 1 ? ` (x${count})` : ''
+                        }`}
                       </TableCell>
                     )}
                     <TableCell>{woundResultsLabels[result]}</TableCell>
@@ -222,9 +243,7 @@ export default function OutputsList({
               })
             ) : (
               <TableRow>
-                <TableCell colSpan={isVapeurBonus ? 3 : 2}>
-                  Aucun résultat
-                </TableCell>
+                <TableCell colSpan={isBonus ? 3 : 2}>Aucun résultat</TableCell>
               </TableRow>
             )}
           </TableBody>
