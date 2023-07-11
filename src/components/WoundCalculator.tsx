@@ -18,7 +18,7 @@ import {
   getFormattedOutputsAsPercentage,
 } from '@/utils/getFormattedOutputs';
 import { computeResults } from '@/utils/computeResults';
-import OutputsList from './OutputsList';
+import OutputsDetails from './OutputsDetails';
 
 type propTypes = {
   id: number;
@@ -136,7 +136,7 @@ export default function WoundCalculator({ id, removeCalculator }: propTypes) {
                 containerRef={ResultContainerRef}
               />,
               <OutputsTable key={2} outputs={outputs} />,
-              <OutputsList
+              <OutputsDetails
                 key={3}
                 detailledOutputs={detailledOutputs}
                 containerRef={ResultContainerRef}
