@@ -14,7 +14,7 @@ import { concatDetailledOutput } from '@/utils/concatDetailledOutput';
 import { fieldsType, orderType } from './OutputsDetails';
 
 type propTypes = {
-  rows: groupedDetailledOutputType[];
+  displayedRows: groupedDetailledOutputType[];
   order: orderType;
   setOrder: Dispatch<SetStateAction<orderType>>;
   orderBy: fieldsType;
@@ -35,7 +35,7 @@ const COLUMNS: columnsType[] = [
 ];
 
 export default function OutputsDetailsList({
-  rows,
+  displayedRows,
   order,
   setOrder,
   orderBy,
@@ -76,8 +76,8 @@ export default function OutputsDetailsList({
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.length ? (
-            rows.map(({ dice, bonus, result, count }) => {
+          {displayedRows.length ? (
+            displayedRows.map(({ dice, bonus, result, count }) => {
               return (
                 <TableRow key={concatDetailledOutput({ dice, bonus, result })}>
                   <TableCell>{dice.join('-')}</TableCell>

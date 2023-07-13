@@ -23,13 +23,19 @@ export const groupDetailledOutputs = (
   if (!isToxique && !isVapeurBonus) return detailledOutputs;
 
   // group according to result (r) toxic worsening (t = 0, 1 or 2) and dice (d1, d2, d3?) like r-t-d1-d2-(d3?)
-  const groupedByDiceAndResult: groupedByDiceAndResultType =
-    detailledOutputs.reduce((acc, cur) => {
-      const group = `${cur.result}-${
-        isToxique && cur.bonus[1] ? (toxique >= cur.bonus[1] ? '2' : '1') : '0'
-      }-${cur.dice.join('-')}`;
-      return { ...acc, [group]: [...(acc[group] || []), cur] };
-    }, {} as groupedByDiceAndResultType);
+  const groupedByDiceAndResult: groupedByDiceAndResultType = {};
+  for (let i = 0; i < detailledOutputs.length; i++) {
+    const detailledOutput = detailledOutputs[i];
+    const group = `${detailledOutput.result}-${
+      isToxique && detailledOutput.bonus[1]
+        ? toxique >= detailledOutput.bonus[1]
+          ? '2'
+          : '1'
+        : '0'
+    }-${detailledOutput.dice.join('-')}`;
+    if (!groupedByDiceAndResult[group]) groupedByDiceAndResult[group] = [];
+    groupedByDiceAndResult[group].push(detailledOutput);
+  }
 
   // reformat in an array with grouped bonus
   return Object.entries(groupedByDiceAndResult).map(

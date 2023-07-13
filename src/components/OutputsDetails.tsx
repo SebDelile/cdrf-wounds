@@ -39,8 +39,13 @@ export default function OutputsDetails({
   const [_, containerHeight] = useResize(containerRef);
 
   const rows: groupedDetailledOutputType[] = useMemo(
+    () => groupDetailledOutputs(detailledOutputs, isVapeurBonus, toxique),
+    [detailledOutputs, isVapeurBonus, toxique]
+  );
+
+  const displayedRows = useMemo(
     () =>
-      groupDetailledOutputs(detailledOutputs, isVapeurBonus, toxique)
+      rows
         .filter(({ dice, result }) => {
           if (filterOption === 'Tout') return true;
           switch (filter) {
@@ -67,23 +72,15 @@ export default function OutputsDetails({
             : order *
                 (concatDetailledOutput(a) > concatDetailledOutput(b) ? 1 : -1);
         }),
-    [
-      detailledOutputs,
-      filter,
-      filterOption,
-      isVapeurBonus,
-      order,
-      orderBy,
-      toxique,
-    ]
+    [rows, filter, filterOption, order, orderBy]
   );
 
-  const rowsCount = useMemo(
-    () => rows.reduce((a, b) => a + (b?.count ?? 1), 0),
-    [rows]
+  const displayedRowsCount = useMemo(
+    () => displayedRows.reduce((a, b) => a + (b?.count ?? 1), 0),
+    [displayedRows]
   );
 
-  const countIndication = `(${rowsCount} / ${detailledOutputs.length})`;
+  const countIndication = `(${displayedRowsCount} / ${detailledOutputs.length})`;
 
   return (
     <Box
@@ -103,7 +100,7 @@ export default function OutputsDetails({
         countIndication={countIndication}
       />
       <OutputsDetailsList
-        rows={rows}
+        displayedRows={displayedRows}
         order={order}
         setOrder={setOrder}
         orderBy={orderBy}
