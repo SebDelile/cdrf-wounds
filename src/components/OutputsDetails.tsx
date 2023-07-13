@@ -89,7 +89,7 @@ export default function OutputsDetails({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'stretch',
-        maxHeight: containerHeight,
+        height: containerHeight,
       }}
     >
       <OutputsDetailsHeader
