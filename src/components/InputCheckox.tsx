@@ -1,55 +1,60 @@
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { inputsType } from '@/types/inputsType';
+import Tooltip from './InputTooltip';
+import { inputsType } from '@/constants/inputs';
+import {
+  inputDisabledType,
+  inputImpliedChangesType,
+} from '@/constants/inputsInfo';
 
 type propTypes = {
-  value: boolean;
   name: keyof inputsType;
   label: string;
-  disabled?: boolean;
+  description: string;
+  disabled?: inputDisabledType;
+  inputs: inputsType;
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
-  impliedChanges?: [
-    keyof inputsType,
-    (
-      currentfield: boolean,
-      impliedField: null | boolean | number
-    ) => null | boolean | number
-  ][];
+  impliedChanges?: inputImpliedChangesType;
 };
 
 export default function InputCheckbox({
-  value,
   name,
   label,
+  description,
   disabled,
+  inputs,
   setInputs,
   impliedChanges,
 }: propTypes) {
   return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          checked={value}
-          onChange={() => {
-            setInputs((state) => {
-              const newState = !state[name];
-              return {
-                ...state,
-                [name]: newState,
-                ...(impliedChanges &&
-                  Object.fromEntries(
-                    impliedChanges.map(([field, callback]) => [
-                      field,
-                      callback(newState, state[field]),
-                    ])
-                  )),
-              };
-            });
-          }}
-        />
-      }
-      label={label}
-      disabled={disabled}
-    />
+    <Tooltip title={description}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={inputs[name] as boolean}
+            onChange={() => {
+              setInputs((state) => {
+                const newState = !state[name];
+                return {
+                  ...state,
+                  [name]: newState,
+                  ...(impliedChanges &&
+                    Object.fromEntries(
+                      impliedChanges.map(([field, callback]) => [
+                        field,
+                        callback(newState, state[field]),
+                      ])
+                    )),
+                };
+              });
+            }}
+          />
+        }
+        label={label}
+        disabled={disabled?.some(([field, callback]) =>
+          callback(inputs[field])
+        )}
+      />
+    </Tooltip>
   );
 }

@@ -4,8 +4,14 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { outputsType } from '@/types/outputsType';
+
+import { outputsType } from '@/constants/outputs';
 import { woundResultsLabels } from '@/constants/woundResults';
+import {
+  getFormattedOutputs,
+  getFormattedOutputsAsCumulativePercentage,
+  getFormattedOutputsAsPercentage,
+} from '@/utils/getFormattedOutputs';
 
 type propTypes = {
   outputs: outputsType;
@@ -13,40 +19,34 @@ type propTypes = {
 
 export default function OutputsTable({ outputs }: propTypes) {
   const totalOutputs = outputs.reduce((a, b) => a + b, 0);
-  // for each : [count, percentage, percentage min]
-  const displayedOutputs = outputs.map((output, index) => [
-    parseFloat(output.toFixed(2)),
-    `${parseFloat(((output / totalOutputs) * 100).toFixed(1))} %`,
-    index
-      ? `${parseFloat(
-          (
-            (outputs.reduce((a, b, j) => a + (index <= j ? b : 0), 0) /
-              totalOutputs) *
-            100
-          ).toFixed(1)
-        )} %`
-      : '-',
-  ]);
+  const formattedOutputs = getFormattedOutputs(outputs);
+  const formattedOutputsAsPercentage = getFormattedOutputsAsPercentage(outputs);
+  const formattedOutputsAsCumulativePercentage =
+    getFormattedOutputsAsCumulativePercentage(outputs);
 
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>{`(${totalOutputs})`}</TableCell>
+            <TableCell
+              sx={{ fontSize: '0.75rem', fontStyle: 'italic' }}
+            >{`(total : ${totalOutputs})`}</TableCell>
             <TableCell>Somme</TableCell>
             <TableCell>Proportion</TableCell>
-            <TableCell>Proportion résultat minimal</TableCell>
+            <TableCell>Proportion cumulée</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {totalOutputs
-            ? displayedOutputs.map((displayedOutput, i) => (
+            ? woundResultsLabels.map((label, i) => (
                 <TableRow key={i}>
-                  <TableCell>{woundResultsLabels[i]}</TableCell>
-                  <TableCell>{displayedOutput[0]}</TableCell>
-                  <TableCell>{displayedOutput[1]}</TableCell>
-                  <TableCell>{displayedOutput[2]}</TableCell>
+                  <TableCell>{label}</TableCell>
+                  <TableCell>{formattedOutputs[i]}</TableCell>
+                  <TableCell>{`${formattedOutputsAsPercentage[i]} %`}</TableCell>
+                  <TableCell>
+                    {i ? `${formattedOutputsAsCumulativePercentage[i]} %` : '-'}
+                  </TableCell>
                 </TableRow>
               ))
             : null}

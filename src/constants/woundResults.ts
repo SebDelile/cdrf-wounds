@@ -1,14 +1,13 @@
-import { outputsType } from '@/types/outputsType';
+import { outputsType } from '@/constants/outputs';
 
+// same position as in outputsType, used in the chart and table
 export const woundResultsLabels = [
   'Rien',
   'Sonné',
   'Légère',
   'Grave',
   'Critique',
-  'Tue net',
+  'Tué net',
 ] as const;
-
-export const initialResults = new Array(6).fill(0) as outputsType;
 
 export type woundResultsType = 0 | 1 | 2 | 3 | 4 | 5;
