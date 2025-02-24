@@ -34,47 +34,20 @@ export function setupWoundTable(inputs: inputsType): WoundTableType {
   }
 
   // replace all results with "rien" in these wound localizations
-  if (immuJambes) {
-    mapOverColumns([1], (_) => 0);
-  }
-  if (immuTete) {
-    mapOverColumns([5, 6], (_) => 0);
-  }
+  if (immuJambes) mapOverColumns([1], () => 0);
+  if (immuTete) mapOverColumns([5, 6], () => 0);
 
-  // in case of multiple effect : opposite effects cancel themself and not possible to shift more than one wound level at the same time
-  // so each cell can only be originalResult, originalResult+1 or originalResult-1
-  if (epeeHache || feroce || ethere || vulnerable) {
-    mapOverColumns([...dice], (originalResult) => {
-      switch (originalResult) {
-        case 1:
-          return (originalResult +
-            Number(feroce && !ethere)) as woundResultsType;
-        case 2:
-        case 3:
-          return (originalResult +
-            Number(vulnerable) -
-            Number(ethere)) as woundResultsType;
-        case 4:
-          return (originalResult +
-            Math.min(
-              Number(vulnerable) + Number(epeeHache) - Number(ethere),
-              1
-            )) as woundResultsType;
-        // both extrems are not affected, no risk to go outside of the possible results range
-        case 0:
-        case 5:
-        default:
-          return originalResult;
-      }
-    });
-  }
+  mapOverColumns([...dice], (originalResult) => {
+    let newResult = originalResult;
+    if (feroce && newResult === 1) newResult = 2;
+    if (epeeHache && newResult === 4) newResult = 5;
+    if (ethere || (vulnerable && [2, 3, 4].includes(newResult)))
+      newResult += Number(vulnerable) - Number(ethere);
+    // at the end because it's not really a replacement, just that "sonné" has no effect for fighter with immu/sonné
+    if (immuSonne && newResult === 1) newResult = 0;
 
-  // replace all results "sonné" with "rien"
-  if (immuSonne) {
-    mapOverColumns([...dice], (originalResult) =>
-      originalResult === 1 ? 0 : originalResult
-    );
-  }
+    return newResult as woundResultsType;
+  });
 
   return modifiedWoundTable;
 }
