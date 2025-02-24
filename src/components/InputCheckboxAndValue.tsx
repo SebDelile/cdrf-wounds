@@ -16,7 +16,7 @@ type propTypes = {
   setInputs: (arg0: (prevState: inputsType) => inputsType) => void;
 };
 
-export default function InputCheckboxWithValue({
+export default function InputCheckboxAndValue({
   name,
   label,
   description,
