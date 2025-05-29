@@ -32,6 +32,7 @@ export default function TotemChart({ data, containerRef }: propTypes) {
         value,
         prevValue: previousData[i],
         color: BAR_COLORS[i],
+        index: i,
       }));
       //remove "rien" and empty results
       const chartDataFiltered = chartData.filter(
@@ -90,14 +91,14 @@ export default function TotemChart({ data, containerRef }: propTypes) {
       // pop the rect in the chart
       svg
         .selectAll('.bars')
-        .data(chartData)
+        .data(chartDataFiltered)
         .enter()
         .append('rect')
         .attr('class', 'bars')
         .attr('stroke', 'black')
         .attr('fill', (d) => `url(#gradient-${d.color.join('-')})`)
-        .attr('x', (chartWidth * 3) / 12)
-        .attr('width', (chartWidth * 3) / 12)
+        .attr('x', (d) => (chartWidth * 3) / 15 + d.index * 10)
+        .attr('width', (d) => (chartWidth * 3) / 10 - d.index * 10)
         .attr('y', (d) => y(d.prevValue))
         .attr(
           'height',
