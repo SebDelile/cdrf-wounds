@@ -33,8 +33,8 @@ export default function OutputsTable({ outputs }: propTypes) {
               sx={{ fontSize: '0.75rem', fontStyle: 'italic' }}
             >{`(total : ${totalOutputs})`}</TableCell>
             <TableCell>Somme</TableCell>
-            <TableCell>Proportion</TableCell>
-            <TableCell>Proportion cumulée</TableCell>
+            <TableCell>Probabilité</TableCell>
+            <TableCell>Probabilité cumulée</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

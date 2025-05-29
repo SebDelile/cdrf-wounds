@@ -147,7 +147,7 @@ export default function BarChart({ data, containerRef }: propTypes) {
       //add legend
       svg
         .append('text')
-        .text('Probalité résultat : ')
+        .text('Probabilité résultat : ')
         .attr('x', CHART_MARGIN + 20)
         .attr('y', CHART_MARGIN + 20)
         .attr('font-family', 'sans-serif')
