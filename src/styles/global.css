@@ -12,10 +12,14 @@ body {
 
 #__next {
   min-height: 100%;
-  padding: 2rem;
+  padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
   gap: 2rem;
+}
+
+#__next > main {
+  flex-grow: 1;
 }

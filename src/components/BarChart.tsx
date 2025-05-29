@@ -52,10 +52,10 @@ export default function BarChart({ data, containerRef }: propTypes) {
         .call(d3.axisBottom(x));
 
       // make the Y axis
-      // *1.08 is to be sure the label fit inside the chart
+      // *1.15 is to be sure the label fit inside the chart
       const yAxisUpperLimit =
         Math.ceil(
-          ((d3.max(chartData.map(({ value }) => value)) ?? 100) * 1.08) / 10
+          ((d3.max(chartData.map(({ value }) => value)) ?? 100) * 1.15) / 10
         ) * 10;
       const y = d3
         .scaleLinear()
@@ -143,6 +143,16 @@ export default function BarChart({ data, containerRef }: propTypes) {
         .attr('y', (d) => y(d.prevValue))
         .transition(chartTransition)
         .attr('y', (d) => y(d.value));
+
+      //add legend
+      svg
+        .append('text')
+        .text('Probalité résultat : ')
+        .attr('x', CHART_MARGIN + 20)
+        .attr('y', CHART_MARGIN + 20)
+        .attr('font-family', 'sans-serif')
+        .attr('font-style', 'italic')
+        .attr('font-size', '16px');
 
       return () => {
         // clean everything between renders

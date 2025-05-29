@@ -32,6 +32,7 @@ export default function TotemChart({ data, containerRef }: propTypes) {
         value,
         prevValue: previousData[i],
         color: BAR_COLORS[i],
+        index: i,
       }));
       //remove "rien" and empty results
       const chartDataFiltered = chartData.filter(
@@ -57,7 +58,7 @@ export default function TotemChart({ data, containerRef }: propTypes) {
       // make the Y axis
       const y = d3
         .scaleLinear()
-        .domain([-5, 105])
+        .domain([0, 109])
         .range([containerHeight - CHART_MARGIN, CHART_MARGIN]);
       const yAxis = svg
         .append('g')
@@ -78,7 +79,7 @@ export default function TotemChart({ data, containerRef }: propTypes) {
       yAxis
         .selectAll('.tick text')
         .attr('dx', 10)
-        .attr('dy', -2)
+        .attr('dy', -4)
         .attr('text-anchor', 'start');
 
       //add a right line to the chart
@@ -90,22 +91,19 @@ export default function TotemChart({ data, containerRef }: propTypes) {
       // pop the rect in the chart
       svg
         .selectAll('.bars')
-        .data(chartData)
+        .data(chartDataFiltered)
         .enter()
         .append('rect')
         .attr('class', 'bars')
         .attr('stroke', 'black')
         .attr('fill', (d) => `url(#gradient-${d.color.join('-')})`)
-        .attr('x', (chartWidth * 3) / 12)
-        .attr('width', (chartWidth * 3) / 12)
+        .attr('x', (d) => (chartWidth * 3) / 15 + d.index * 10)
+        .attr('width', (d) => (chartWidth * 3) / 10 - d.index * 10)
         .attr('y', (d) => y(d.prevValue))
-        .attr(
-          'height',
-          (d) => containerHeight - CHART_MARGIN - y(d.prevValue - 5)
-        )
+        .attr('height', (d) => containerHeight - CHART_MARGIN - y(d.prevValue))
         .transition(chartTransition)
         .attr('y', (d) => y(d.value))
-        .attr('height', (d) => containerHeight - CHART_MARGIN - y(d.value - 5));
+        .attr('height', (d) => containerHeight - CHART_MARGIN - y(d.value));
 
       const drawConnector = (label: string, value: number): string =>
         //prettier-ignore
@@ -136,7 +134,17 @@ export default function TotemChart({ data, containerRef }: propTypes) {
         .attr('x', (chartWidth * 8) / 12)
         .attr('y', (d) => yLabels(d.label)!)
         .attr('font-family', 'sans-serif')
-        .attr('font-size', '20px');
+        .attr('font-size', '18px');
+
+      //add legend
+      svg
+        .append('text')
+        .text('Proba de faire au moins : ')
+        .attr('x', (chartWidth * 8) / 12)
+        .attr('y', CHART_MARGIN + 20)
+        .attr('font-family', 'sans-serif')
+        .attr('font-style', 'italic')
+        .attr('font-size', containerWidth > 520 ? '16px' : '12px');
 
       return () => {
         // clean everything between renders

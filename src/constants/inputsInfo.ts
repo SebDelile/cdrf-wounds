@@ -37,8 +37,9 @@ export const INPUTS_INFO: inputsInfoType = {
   FORmoinsRES: {
     label: 'FOR moins RES',
     description:
-      "La force (FOR) de l'agresseur moins la résistance (RES) de la victime.",
+      "La force (FOR) de l'agresseur moins la résistance (RES) de la victime. Pas plus d'impact en allant en dessous de -7 ou au dessus de 17.",
     type: TYPE_NUMBER,
+    range: [-10, 21],
   },
   double6Tue: {
     label: '6-6 = Tué net',

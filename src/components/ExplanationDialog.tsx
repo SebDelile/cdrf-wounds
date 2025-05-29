@@ -52,6 +52,7 @@ export function ExplanationDialog({}) {
             textAlign: 'justify',
           }}
         >
+          <DialogContentText>{EXPLANATION.disclaimer}</DialogContentText>
           <DialogContentText>{EXPLANATION.intro}</DialogContentText>
           <DialogContentText>{EXPLANATION.rule}</DialogContentText>
           <Accordion disableGutters sx={{ borderRadius: '0.25rem !important' }}>

@@ -28,13 +28,10 @@ type propTypes = {
 export default function WoundCalculator({ id, removeCalculator }: propTypes) {
   // inputs is the state of the form
   const [inputs, setInputs] = useState<inputsType>(initialInputs);
-  //if true, it log detailled results
   // the selected tab to display the results
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   // all the results, recalculated each time inputs is changed
-  // better use useMemo over useState/useEffect to avoid 2 renders instead of one
-  // second parameter is isDebug flag (to log the detailled results)
   const [outputs, detailledOutputs] = useMemo<
     [outputsType, detailledOutputType[]]
   >(() => computeResults(inputs), [inputs]);

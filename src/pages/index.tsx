@@ -23,49 +23,43 @@ export default function Home() {
   };
 
   return (
-    <>
-      <Head>
-        <title>CDRF Calcul de blessure</title>
-      </Head>
-      <h1 hidden>Calculateur de blessure CDRF</h1>
-      <Grid container spacing={4} component={'main'}>
-        <SvgLinearGradient />
-        {calculators.map((id) => (
-          <Grid
-            item
-            key={id}
-            xs={12}
-            component={'section'}
-            sx={{ position: 'relative' }}
-          >
-            <WoundCalculator
-              id={id}
-              removeCalculator={
-                calculators.length > 1 ? removeCalculator : undefined
-              }
-            />
-            <hr
-              style={{
-                position: 'absolute',
-                left: '20%',
-                bottom: '-26px',
-                width: '60%',
-                border: `solid ${grey[400]} 2px`,
-              }}
-            />
-          </Grid>
-        ))}
-        <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={() => addCalculator()}
-            sx={{ backgroundColor: 'white' }}
-          >
-            Ajouter un calculateur
-          </Button>
+    <Grid container spacing={4}>
+      <SvgLinearGradient />
+      {calculators.map((id) => (
+        <Grid
+          item
+          key={id}
+          xs={12}
+          component={'section'}
+          sx={{ position: 'relative' }}
+        >
+          <WoundCalculator
+            id={id}
+            removeCalculator={
+              calculators.length > 1 ? removeCalculator : undefined
+            }
+          />
+          <hr
+            style={{
+              position: 'absolute',
+              left: '20%',
+              bottom: '-26px',
+              width: '60%',
+              border: `solid ${grey[400]} 2px`,
+            }}
+          />
         </Grid>
+      ))}
+      <Grid item sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button
+          variant="outlined"
+          startIcon={<AddIcon />}
+          onClick={() => addCalculator()}
+          sx={{ backgroundColor: 'white' }}
+        >
+          Ajouter un calculateur
+        </Button>
       </Grid>
-    </>
+    </Grid>
   );
 }
