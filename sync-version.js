@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 
 // get the version in the package.json
 const packageJsonPath = path.resolve('./package.json');
-const packageJson = require(packageJsonPath);
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 const version = packageJson.version;
 
 // get the current .env file or create it if missing
